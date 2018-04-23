@@ -19,3 +19,7 @@ func (c coin) Name() string {
 func (c coin) Price() float32 {
     return c.price
 }
+
+func (c coin) DailyPriceAdjustment() {
+    c.price = c.price + 1.00
+}
