@@ -1,0 +1,28 @@
+-- Exchanges
+  - MtGanx
+  - GDOX
+  - Bitsaurus 
+  - Czinance
+  - CoinHQ
+  - CoinHawk
+  - Napoleox
+  - UCOIN
+  -   
+
+-- Coins
+  - Bitcoin (BTC)
+    - Capacity 21,000,000
+  - Nethereum (NTH)
+  - Nethereum Vintage (NTV) 
+  - ZEO (ZEO)
+  - riddle (XRD)
+  - AntBytes (ANB)
+  - Bitbeets (BBT)
+  - TRAM (TRM)
+
+-- Traders
+  - E-celeb
+  - NEET
+  - Whale
+  - Former Professional
+
