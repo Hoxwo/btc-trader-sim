@@ -4,7 +4,7 @@ import "fmt"
 import "time"
 import coin "btc-trader-sim/coin"
 import trader "btc-trader-sim/trader"
-//import exchange "btc-trader-sim/exchange"
+import exchange "btc-trader-sim/exchange"
 import termui "github.com/gizak/termui"
 
 func main() {
@@ -14,6 +14,8 @@ func main() {
 	dayCounter := 0
         //track the total market cap
         var totalMarketCap float64 = 0.00
+	// the current market trend
+	var trend int = 2
 	// array of coins 
 	coins := make([]*coin.Coin, 0)
 	// array of coin prices
@@ -21,7 +23,11 @@ func main() {
 	// array of maps for storing coin price history	
 	coinPriceHistory := make(map[string][]float64)
 	// array of exchanges
-	//exchanges := make([]exchange, 20)
+	exchanges := make([]*exchange.Exchange, 20)
+	// array of exchange valueAdded
+	exchangeValues := make(map[string]float64)
+	// array of maps for storing exchange value history	
+	exchangeValueHistory := make(map[string][]float64)
 
 	// set up coins
 	// 	{name, symbol, price, trend, minShare, maxShare, currentShare, supply, launchDay}
@@ -62,21 +68,44 @@ func main() {
 	coinPriceHistory[c8.Name()] = append(arr1, c8.Price())
 	coinPriceHistory[c9.Name()] = append(arr1, c9.Price())
 
+	//set up exchanges 
+	e0 := exchange.New("Mt Ganx",   0.00,  250000000000.00, 1)
+	e1 := exchange.New("GDOX",      0.00,  500000000000.00, 366)
+	e2 := exchange.New("BitSaurus", 0.00, 1000000000000.00, 730)
+	e3 := exchange.New("CoinHQ",    0.00, 1500000000000.00, 1095)
+	e4 := exchange.New("Czinance",  0.00, 1000000000000.00, 1460)
+	e5 := exchange.New("Napoleox",  0.00,  750000000000.00, 1825)
+	e6 := exchange.New("YoCoin",    0.00,  250000000000.00, 2190)
+	e7 := exchange.New("CoinHawk",  0.00,  250000000000.00, 2555)	
+
+	// add to master list
+	exchanges = append(exchanges, &e0, &e1, &e2, &e3, &e4, &e5, &e6, &e7)
+
+	//start the exchange and history tracking	
+	exchangeValues[e0.Name()] = e0.Price()
+	exchangeValues[e1.Name()] = e1.Price()
+	exchangeValues[e2.Name()] = e2.Price()
+	exchangeValues[e3.Name()] = e3.Price()
+	exchangeValues[e4.Name()] = e4.Price()
+	exchangeValues[e5.Name()] = e5.Price()
+	exchangeValues[e6.Name()] = e6.Price()	
+	exchangeValues[e7.Name()] = e7.Price()
+	arr1 := make([]float64, 0)
+	exchangeValueHistory[e0.Name()] = append(arr1, e0.Price())
+	exchangeValueHistory[e1.Name()] = append(arr1, e1.Price())
+	exchangeValueHistory[e2.Name()] = append(arr1, e2.Price())
+	exchangeValueHistory[e3.Name()] = append(arr1, e3.Price())
+	exchangeValueHistory[e4.Name()] = append(arr1, e4.Price())
+	exchangeValueHistory[e5.Name()] = append(arr1, e5.Price())
+	exchangeValueHistory[e6.Name()] = append(arr1, e6.Price())
+	exchangeValueHistory[e7.Name()] = append(arr1, e7.Price())
 
   	//t := trader.New("kc", 100.00)
-        //e := exchange.New("gdax", 100.00)
+        
     
 	//coinPrice := fmt.Sprintf("%s | %.6f \n", c.Name(), c.Price())
     	//playerSavings := fmt.Sprintf("%s has savings balance %.6f \n", t.Name(), t.SavingsBalance())
         //exchangeVolume := fmt.Sprintf("%s has volume %.6f \n", e.Name(), e.Volume())
-
-    //ColorRed
-    //ColorGreen
-    //ColorYellow
-    //ColorBlue
-    //ColorMagenta
-    //ColorCyan
-    //ColorWhite
 
 	err := termui.Init()
 	if err != nil {
@@ -91,11 +120,13 @@ func main() {
 	})
 
 	termui.Handle("/sys/kbd/i", func(termui.Event) {
-		currentTime.AddDate(0, 0, 1)
+		currentTime = currentTime.Add(time.Hour * 24 * 1)
 		dayCounter++
 		AdvanceOneDay(coins, coinPrices, coinPriceHistory, dayCounter, totalMarketCap)
 	
 		// Short term dollar amounts, or estimate of day until ICO
+		shorttermhisttitle := ""
+		if(
 		shorttermhist0 := termui.NewSparkline()
 		shorttermhist0.Data = FloatToInts(GetHistoricPriceDataForCoin("Bitcoin", coinPriceHistory))
 		shorttermhist0.Title = "BTC"
@@ -154,7 +185,7 @@ func main() {
 		shorttermhistograms.Height = 20
 		shorttermhistograms.Width = 24
 		shorttermhistograms.Y = 12
-		shorttermhistograms.X = 50
+		shorttermhistograms.X = 64
 		shorttermhistograms.BorderLabel = "Short Term $ History"
 
 	// single
@@ -190,6 +221,15 @@ func main() {
 }
 
 func AdvanceOneDay(coins []*coin.Coin, coinPrices map[string]float64, coinPriceHistory map[string][]float64, dayCounter int, totalMarketCap float64) {
+	//save today's exchange valueAdded for all exchanges
+	//find new exchange valueAdded for all exchanges
+	for _, e := range exchanges {
+	    currentPriceHistory := coinPriceHistory[c.Name()]
+	    delete(coinPriceHistory, c.Name())
+	    coinPriceHistory[c.Name()] = append(currentPriceHistory, coinPrices[c.Name()])
+	    coinPrices[c.Name()] = c.DailyPriceAdjustment(totalMarketCap)
+	}			
+
 	// save coin price history for all coins
 	// and find next day's value
 	for _, c := range coins {
@@ -198,7 +238,6 @@ func AdvanceOneDay(coins []*coin.Coin, coinPrices map[string]float64, coinPriceH
 	    coinPriceHistory[c.Name()] = append(currentPriceHistory, coinPrices[c.Name()])
 	    coinPrices[c.Name()] = c.DailyPriceAdjustment(totalMarketCap)
 	}		
-	//find new exchange volume for all exchanges
 
 }
 

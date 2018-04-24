@@ -1,10 +1,10 @@
 -- Exchanges
   - MtGanx (250 billion)
   - GDOX (500 billion)   [.75 trillion]
-  - Bitsaurus (750 billion) [1.5 trillion]
+  - Bitsaurus (1 trillion)  [1.5 trillion]
   - CoinHQ   (1.5 trillion) [3 trillion]
   - Czinance (1 trillion)   [4 trillion]
-  - Napoleox (1 trillion)   [5 trillion]
+  - Napoleox  (750 billion) [5 trillion]
   - YoCoin   (250 billion)  [5.25 trillion]
   - CoinHawk (250 billion)  [5.5 trillion]
 
@@ -12,7 +12,8 @@
   - MtGanx Hack
   - 1 in 10 chance for YoCoin/CoinHawk to go down 
   - 1 in 10 chance for any coin to fail from bad press/scam
-  - 
+  - 2015, conference every June
+  - 1 in 10 chance of news release per month per coin
 
 -- Coins
   - Bitcoin (BTC)
@@ -49,4 +50,17 @@
 -- Game runs from 2010 - 2025, or when the total market cap hits 5 trillion
     - New exchanges are added, bullish or bearish will 
     - Coin reaching top of market share will veer bearish; bottom will veer bullish
-    - New exchange opens every year, capcity works up to their threshold
+    - New exchange opens every year, capacity works up to their threshold
+    - Reach a million to "make it", go for highest score after
+
+-- Aug, Sep, Oct, Feb, Mar, Apr more likely to be Bearish
+-- Nov, Dec, Jan, May, Jun, Jul more likely to be Bullish
+
+-- BULLISH with HYPE
+	- "There's a lot of hype in the market now. Swings will be wild!"
+-- BULLISH
+	- "The market is bullish. Good luck!"
+-- BEARISH
+	- "The market is bearish. Be careful!"
+-- BEARISH with DOUBT
+	- "There's a lot of doubt in the market now. Swings will be wild!"

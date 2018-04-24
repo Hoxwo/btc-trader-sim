@@ -8,7 +8,7 @@ type Coin struct {
     name string
     symbol string
     price float64
-    trend int          //BULLISH 1 or BEARISH 2, affects market share modifier
+    trend int          //BULLISH with HYPE 1, BULLISH 2, BEARISH 3, or BEARISH with DOUBT 4, affects market share modifier
     minShare int       //min total market cap share this coin can have, out of 100
     maxShare int       //max total market cap share this coin can have, out of 100
     currentShare int   //current total market cap share this coin has
