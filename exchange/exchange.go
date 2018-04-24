@@ -1,10 +1,13 @@
 package exchange
 
+import "time"
+import "math/rand"
+
 type Exchange struct {
     name string
     valueAdded float64
     maxValueAdded float64
-    launchDay
+    launchDay int
 }
 
 func New(name string, valueAdded float64, maxValueAdded float64, launchDay int) Exchange {
@@ -12,7 +15,7 @@ func New(name string, valueAdded float64, maxValueAdded float64, launchDay int) 
     return e
 }
 
-func (e *Exchange) SetName(name string) string {
+func (e *Exchange) SetName(name string) {
     e.name = name
 }
 
@@ -44,14 +47,45 @@ func (e *Exchange) SetLaunchDay(launchDay int) {
     e.launchDay = launchDay
 }
 
-func (e *Exchange) DailyValueAdjustment(totalMarketCap float64, trend int) {
-	if (trend == 1) {
+func random(min, max int) int {
+    rand.Seed(time.Now().Unix())
+    return rand.Intn(max - min) + min
+}
 
-	} else if (trend == 2) {
+func (e *Exchange) DailyValueAdjustment(totalMarketCap float64, marketTrend int) float64 {
+	if (marketTrend == 1) {
 
-	} else if (trend == 3) {
+	} else if (marketTrend == 2) {
+
+	} else if (marketTrend == 3) {
 
 	} else {
 
 	}
+	return e.ValueAdded()
+}
+
+func (e *Exchange) DailyLaunchAdjustment(marketTrend int) int {
+    //depending on overall market trend, this exchange's launch will slide forward or backward
+    if (marketTrend == 1) {
+	dailySlide := random(1, 3)
+	e.SetLaunchDay(e.LaunchDay() - dailySlide) 
+    } else if (marketTrend == 2) {
+	dailySlide := random(1, 3)
+	chance := random(1,5)
+	if (chance == 4) {
+		e.SetLaunchDay(e.LaunchDay() - dailySlide) 
+	}
+    } else if (marketTrend == 3) {
+	dailySlide := random(1, 3)
+	chance := random(1,5)
+	if (chance == 4) {
+		e.SetLaunchDay(e.LaunchDay() - dailySlide) 
+	}
+    } else {
+	dailySlide := random(1, 3)
+	e.SetLaunchDay(e.LaunchDay() + dailySlide) 
+    }
+
+    return e.LaunchDay()
 }

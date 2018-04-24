@@ -15,7 +15,7 @@ func main() {
         //track the total market cap
         var totalMarketCap float64 = 0.00
 	// the current market trend
-	var trend int = 2
+	var marketTrend int = 2 //BULLISH with HYPE 1, BULLISH 2, BEARISH 3, or BEARISH with DOUBT 4, affects market share modifier and launches
 	// array of coins 
 	coins := make([]*coin.Coin, 0)
 	// array of coin prices
@@ -23,7 +23,7 @@ func main() {
 	// array of maps for storing coin price history	
 	coinPriceHistory := make(map[string][]float64)
 	// array of exchanges
-	exchanges := make([]*exchange.Exchange, 20)
+	exchanges := make([]*exchange.Exchange, 0)
 	// array of exchange valueAdded
 	exchangeValues := make(map[string]float64)
 	// array of maps for storing exchange value history	
@@ -82,23 +82,23 @@ func main() {
 	exchanges = append(exchanges, &e0, &e1, &e2, &e3, &e4, &e5, &e6, &e7)
 
 	//start the exchange and history tracking	
-	exchangeValues[e0.Name()] = e0.Price()
-	exchangeValues[e1.Name()] = e1.Price()
-	exchangeValues[e2.Name()] = e2.Price()
-	exchangeValues[e3.Name()] = e3.Price()
-	exchangeValues[e4.Name()] = e4.Price()
-	exchangeValues[e5.Name()] = e5.Price()
-	exchangeValues[e6.Name()] = e6.Price()	
-	exchangeValues[e7.Name()] = e7.Price()
-	arr1 := make([]float64, 0)
-	exchangeValueHistory[e0.Name()] = append(arr1, e0.Price())
-	exchangeValueHistory[e1.Name()] = append(arr1, e1.Price())
-	exchangeValueHistory[e2.Name()] = append(arr1, e2.Price())
-	exchangeValueHistory[e3.Name()] = append(arr1, e3.Price())
-	exchangeValueHistory[e4.Name()] = append(arr1, e4.Price())
-	exchangeValueHistory[e5.Name()] = append(arr1, e5.Price())
-	exchangeValueHistory[e6.Name()] = append(arr1, e6.Price())
-	exchangeValueHistory[e7.Name()] = append(arr1, e7.Price())
+	exchangeValues[e0.Name()] = e0.ValueAdded()
+	exchangeValues[e1.Name()] = e1.ValueAdded()
+	exchangeValues[e2.Name()] = e2.ValueAdded()
+	exchangeValues[e3.Name()] = e3.ValueAdded()
+	exchangeValues[e4.Name()] = e4.ValueAdded()
+	exchangeValues[e5.Name()] = e5.ValueAdded()
+	exchangeValues[e6.Name()] = e6.ValueAdded()	
+	exchangeValues[e7.Name()] = e7.ValueAdded()
+	arr2 := make([]float64, 0)
+	exchangeValueHistory[e0.Name()] = append(arr2, e0.ValueAdded())
+	exchangeValueHistory[e1.Name()] = append(arr2, e1.ValueAdded())
+	exchangeValueHistory[e2.Name()] = append(arr2, e2.ValueAdded())
+	exchangeValueHistory[e3.Name()] = append(arr2, e3.ValueAdded())
+	exchangeValueHistory[e4.Name()] = append(arr2, e4.ValueAdded())
+	exchangeValueHistory[e5.Name()] = append(arr2, e5.ValueAdded())
+	exchangeValueHistory[e6.Name()] = append(arr2, e6.ValueAdded())
+	exchangeValueHistory[e7.Name()] = append(arr2, e7.ValueAdded())
 
   	//t := trader.New("kc", 100.00)
         
@@ -122,59 +122,68 @@ func main() {
 	termui.Handle("/sys/kbd/i", func(termui.Event) {
 		currentTime = currentTime.Add(time.Hour * 24 * 1)
 		dayCounter++
-		AdvanceOneDay(coins, coinPrices, coinPriceHistory, dayCounter, totalMarketCap)
+		AdvanceOneDay(coins, exchanges, coinPrices, exchangeValues, coinPriceHistory, coinPriceHistory, dayCounter, totalMarketCap, 						marketTrend)
 	
-		// Short term dollar amounts, or estimate of day until ICO
-		shorttermhisttitle := ""
-		if(
+		// Short term dollar amounts, or estimate of day until launch
+
+		shorttermhisttitle0 := ShortTermCoinTitle(coins[0], dayCounter)
 		shorttermhist0 := termui.NewSparkline()
 		shorttermhist0.Data = FloatToInts(GetHistoricPriceDataForCoin("Bitcoin", coinPriceHistory))
-		shorttermhist0.Title = "BTC"
+		shorttermhist0.Title = shorttermhisttitle0
 		shorttermhist0.LineColor = termui.ColorGreen
 
+		shorttermhisttitle1 := ShortTermCoinTitle(coins[1], dayCounter)
 		shorttermhist1 := termui.NewSparkline()
 		shorttermhist1.Data = FloatToInts(GetHistoricPriceDataForCoin("Lightcoin", coinPriceHistory))
-		shorttermhist1.Title = "LGC"
+		shorttermhist1.Title = shorttermhisttitle1
 		shorttermhist1.LineColor = termui.ColorCyan
 
+		shorttermhisttitle2 := ShortTermCoinTitle(coins[2], dayCounter)
 		shorttermhist2 := termui.NewSparkline()
 		shorttermhist2.Data = FloatToInts(GetHistoricPriceDataForCoin("Nethereum", coinPriceHistory))
-		shorttermhist2.Title = "NTH"
+		shorttermhist2.Title = shorttermhisttitle2
 		shorttermhist2.LineColor = termui.ColorMagenta
 
+		shorttermhisttitle3 := ShortTermCoinTitle(coins[3], dayCounter)
 		shorttermhist3 := termui.NewSparkline()	
 		shorttermhist3.Data = FloatToInts(GetHistoricPriceDataForCoin("Nethereum Vintage", coinPriceHistory))
-		shorttermhist3.Title = "NTV"
+		shorttermhist3.Title = shorttermhisttitle3
 		shorttermhist3.LineColor = termui.ColorGreen
 
+		shorttermhisttitle4 := ShortTermCoinTitle(coins[4], dayCounter)
 		shorttermhist4 := termui.NewSparkline()
 		shorttermhist4.Data = FloatToInts(GetHistoricPriceDataForCoin("Riddle", coinPriceHistory))
-		shorttermhist4.Title = "XRD"
+		shorttermhist4.Title = shorttermhisttitle4
 		shorttermhist4.LineColor = termui.ColorCyan
 	
+		shorttermhisttitle5 := ShortTermCoinTitle(coins[5], dayCounter)
 		shorttermhist5 := termui.NewSparkline()
 		shorttermhist5.Data = FloatToInts(GetHistoricPriceDataForCoin("ZEO", coinPriceHistory))
-		shorttermhist5.Title = "ZEO"
+		shorttermhist5.Title = shorttermhisttitle5
 		shorttermhist5.LineColor = termui.ColorMagenta
 	
+		shorttermhisttitle6 := ShortTermCoinTitle(coins[6], dayCounter)
 		shorttermhist6 := termui.NewSparkline()
 		shorttermhist6.Data = FloatToInts(GetHistoricPriceDataForCoin("YCash", coinPriceHistory))
-		shorttermhist6.Title = "YEC"
+		shorttermhist6.Title = shorttermhisttitle6
 		shorttermhist6.LineColor = termui.ColorGreen
 	
+		shorttermhisttitle7 := ShortTermCoinTitle(coins[7], dayCounter)
 		shorttermhist7 := termui.NewSparkline()
 		shorttermhist7.Data = FloatToInts(GetHistoricPriceDataForCoin("Intersteller", coinPriceHistory))
-		shorttermhist7.Title = "ILM"
+		shorttermhist7.Title = shorttermhisttitle7
 		shorttermhist7.LineColor = termui.ColorCyan
-	
+
+		shorttermhisttitle8 := ShortTermCoinTitle(coins[8], dayCounter)
 		shorttermhist8 := termui.NewSparkline()
 		shorttermhist8.Data = FloatToInts(GetHistoricPriceDataForCoin("Bitbeets", coinPriceHistory))
-		shorttermhist8.Title = "BBT"
+		shorttermhist8.Title = shorttermhisttitle8
 		shorttermhist8.LineColor = termui.ColorMagenta
 
+		shorttermhisttitle9 := ShortTermCoinTitle(coins[9], dayCounter)
 		shorttermhist9 := termui.NewSparkline()
 		shorttermhist9.Data = FloatToInts(GetHistoricPriceDataForCoin("TRAM", coinPriceHistory))
-		shorttermhist9.Title = "TRM"
+		shorttermhist9.Title = shorttermhisttitle9
 		shorttermhist9.LineColor = termui.ColorGreen
 
 		// put them together
@@ -183,9 +192,9 @@ func main() {
 					shorttermhist6, shorttermhist7, shorttermhist8,
 					shorttermhist9)
 		shorttermhistograms.Height = 20
-		shorttermhistograms.Width = 24
+		shorttermhistograms.Width = 28
 		shorttermhistograms.Y = 12
-		shorttermhistograms.X = 64
+		shorttermhistograms.X = 68
 		shorttermhistograms.BorderLabel = "Short Term $ History"
 
 	// single
@@ -220,14 +229,17 @@ func main() {
 
 }
 
-func AdvanceOneDay(coins []*coin.Coin, coinPrices map[string]float64, coinPriceHistory map[string][]float64, dayCounter int, totalMarketCap float64) {
+func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrices map[string]float64, exchangeValues map[string]float64, 			coinPriceHistory map[string][]float64, exchangeValueHistory map[string][]float64, dayCounter int, totalMarketCap float64, marketTrend int) {
 	//save today's exchange valueAdded for all exchanges
 	//find new exchange valueAdded for all exchanges
 	for _, e := range exchanges {
-	    currentPriceHistory := coinPriceHistory[c.Name()]
-	    delete(coinPriceHistory, c.Name())
-	    coinPriceHistory[c.Name()] = append(currentPriceHistory, coinPrices[c.Name()])
-	    coinPrices[c.Name()] = c.DailyPriceAdjustment(totalMarketCap)
+	    currentValueHistory := exchangeValueHistory[e.Name()]
+	    delete(exchangeValueHistory, e.Name())
+	    exchangeValueHistory[e.Name()] = append(currentValueHistory, exchangeValues[e.Name()])
+	    exchangeValues[e.Name()] = e.DailyValueAdjustment(totalMarketCap, marketTrend)
+	    if(e.LaunchDay() > dayCounter) {
+	    	e.DailyLaunchAdjustment(marketTrend)
+	    }
 	}			
 
 	// save coin price history for all coins
@@ -237,8 +249,23 @@ func AdvanceOneDay(coins []*coin.Coin, coinPrices map[string]float64, coinPriceH
 	    delete(coinPriceHistory, c.Name())
 	    coinPriceHistory[c.Name()] = append(currentPriceHistory, coinPrices[c.Name()])
 	    coinPrices[c.Name()] = c.DailyPriceAdjustment(totalMarketCap)
+	    if(c.LaunchDay() > dayCounter) {
+	    	c.DailyLaunchAdjustment(marketTrend)
+	    }
 	}		
 
+}
+
+func ShortTermCoinTitle(coin *coin.Coin, dayCounter int) string {
+	shorttermhisttitle := ""
+	
+	if(coin.LaunchDay() > dayCounter) {
+		shorttermhisttitle = fmt.Sprintf("%s - ETA %d days", coin.Symbol(), coin.LaunchDay())
+	} else {
+		shorttermhisttitle = fmt.Sprintf("%s - $%.2f ", coin.Symbol(), coin.Price())
+	}
+	
+	return shorttermhisttitle
 }
 
 func GetHistoricPriceDataForCoin(coin string, coinPriceHistory map[string][]float64) []float64 {

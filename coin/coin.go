@@ -8,7 +8,7 @@ type Coin struct {
     name string
     symbol string
     price float64
-    trend int          //BULLISH with HYPE 1, BULLISH 2, BEARISH 3, or BEARISH with DOUBT 4, affects market share modifier
+    trend int          //BULLISH with HYPE 1, BULLISH 2, BEARISH 3, or BEARISH with DOUBT 4, affects market share modifier and launch times 
     minShare int       //min total market cap share this coin can have, out of 100
     maxShare int       //max total market cap share this coin can have, out of 100
     currentShare int   //current total market cap share this coin has
@@ -27,6 +27,14 @@ func (c *Coin) SetName(name string) {
 
 func (c Coin) Name() string {
     return c.name
+}
+
+func (c *Coin) SetSymbol(symbol string) {
+    c.symbol = symbol
+}
+
+func (c Coin) Symbol() string {
+    return c.symbol
 }
 
 func (c *Coin) SetPrice(price float64) {
@@ -102,4 +110,23 @@ func (c *Coin) DailyPriceAdjustment(totalMarketCap float64) float64 {
     }
 
     return c.Price()
+}
+
+func (c *Coin) DailyLaunchAdjustment(marketTrend int) int {
+    //depending on overall market trend, this coin's launch will slide forward or backward
+    if (c.Trend() == 1) {
+	dailySlide := random(1, 7)
+	c.SetLaunchDay(c.LaunchDay() - dailySlide) 
+    } else if (c.Trend() == 2) {
+	dailySlide := random(1, 3)
+	c.SetLaunchDay(c.LaunchDay() - dailySlide) 
+    } else if (c.Trend() == 3) {
+	dailySlide := random(1, 3)
+	c.SetLaunchDay(c.LaunchDay() + dailySlide) 
+    } else {
+	dailySlide := random(1, 7)
+	c.SetLaunchDay(c.LaunchDay() + dailySlide) 
+    }
+
+    return c.LaunchDay()
 }
