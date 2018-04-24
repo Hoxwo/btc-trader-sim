@@ -55,10 +55,14 @@ func random(min, max int) int {
 func (e *Exchange) DailyValueAdjustment(totalMarketCap int, marketTrend int) int {
 	if (marketTrend == 1) {
 	    dailyIncrease := 10
-	    e.SetValueAdded(e.ValueAdded() + dailyIncrease)
+	    if (dailyIncrease + e.ValueAdded() < e.MaxValueAdded()) {
+	    	e.SetValueAdded(e.ValueAdded() + dailyIncrease)
+	    }
 	} else if (marketTrend == 2) {
 	    dailyIncrease := 10
-	    e.SetValueAdded(e.ValueAdded() + dailyIncrease)
+	    if (dailyIncrease + e.ValueAdded() < e.MaxValueAdded()) {
+	    	e.SetValueAdded(e.ValueAdded() + dailyIncrease)
+	    }
 	} else if (marketTrend == 3) {
 	    dailyDecrease := 1
 	    if (dailyDecrease > e.ValueAdded()) {
@@ -92,7 +96,7 @@ func (e *Exchange) DailyLaunchAdjustment(marketTrend int) int {
 	dailySlide := random(1, 3)
 	chance := random(1,5)
 	if (chance == 4) {
-		e.SetLaunchDay(e.LaunchDay() - dailySlide) 
+		e.SetLaunchDay(e.LaunchDay() + dailySlide) 
 	}
     } else {
 	dailySlide := random(1, 3)
