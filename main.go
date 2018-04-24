@@ -12,23 +12,23 @@ func main() {
 	currentTime := time.Date(2010, time.January, 1, 0, 0, 0, 0, time.UTC)
 	dayCounter := 0
 	// array of coins 
-	coins := make([]coin.Coin, 0)
+	coins := make([]*coin.Coin, 0)
 	// array of coin prices
-	coinPrices := make(map[string]float32)
+	coinPrices := make(map[string]float64)
 	// array of maps for storing coin price history	
-	coinPriceHistory := make(map[string][]float32)
+	coinPriceHistory := make(map[string][]float64)
 	// array of exchanges
 	//exchanges := make([]exchange, 20)
 
 	// set up Bitcoin, player Trader, and an exchange
-	c := coin.New("bitcoin", 10.01, "FINANCE", "BULLISH")
-	c2 := coin.New("eth", 3.01, "FINANCE", "BULLISH")
-	c3 := coin.New("ltc", 1.01, "FINANCE", "BULLISH")
-	coins = append(coins, c, c2, c3)
+	c := coin.New("bitcoin", 10.01, "FINANCE", 1)
+	c2 := coin.New("eth", 3.01, "FINANCE", 2)
+	c3 := coin.New("ltc", 1.01, "FINANCE", 3)
+	coins = append(coins, &c, &c2, &c3)
 	coinPrices[c.Name()] = c.Price()
 	coinPrices[c2.Name()] = c2.Price()
 	coinPrices[c3.Name()] = c3.Price()
-	arr1 := make([]float32, 0)
+	arr1 := make([]float64, 0)
 	coinPriceHistory[c.Name()] = append(arr1, c.Price())
 	coinPriceHistory[c2.Name()] = append(arr1, c2.Price())
 	coinPriceHistory[c3.Name()] = append(arr1, c3.Price())
@@ -73,7 +73,7 @@ func main() {
 
 	// group
 	spls1 := termui.NewSparklines(spl0, spl1, spl2)
-	spls1.Height = 30
+	spls1.Height = 12
 	spls1.Width = 26
 	spls1.Y = 16
 	spls1.BorderLabel = "Dollar Values"
@@ -137,7 +137,7 @@ func main() {
 
 }
 
-func AdvanceOneDay(coins []coin.Coin, coinPrices map[string]float32, coinPriceHistory map[string][]float32, dayCounter int) {
+func AdvanceOneDay(coins []*coin.Coin, coinPrices map[string]float64, coinPriceHistory map[string][]float64, dayCounter int) {
 	// save coin price history for all coins
 	// and find next day's value
 	for _, c := range coins {
@@ -150,13 +150,13 @@ func AdvanceOneDay(coins []coin.Coin, coinPrices map[string]float32, coinPriceHi
 
 }
 
-func GetHistoricPriceDataForCoin(coin string, coinPriceHistory map[string][]float32) []float32 {
+func GetHistoricPriceDataForCoin(coin string, coinPriceHistory map[string][]float64) []float64 {
 	return coinPriceHistory[coin]
 }
 
-func GetTraderDollarValueForCoin(t trader.Trader, coin string, coinPriceHistory map[string][]float32) []float32 {
+func GetTraderDollarValueForCoin(t trader.Trader, coin string, coinPriceHistory map[string][]float64) []float64 {
 	traderBalance := t.HistoricBalanceForCoin(coin)
-	traderDollarValue := make([]float32, len(traderBalance))
+	traderDollarValue := make([]float64, len(traderBalance))
 	for i, _ := range traderBalance {
 		traderDollarValue[i] = (traderBalance[i]*coinPriceHistory[coin][i])
 	}
@@ -164,9 +164,9 @@ func GetTraderDollarValueForCoin(t trader.Trader, coin string, coinPriceHistory 
 	return traderDollarValue
 }
 
-func GetTraderDollarValueForAllCoins(t trader.Trader, coinPriceHistory map[string][]float32) []float32 {
+func GetTraderDollarValueForAllCoins(t trader.Trader, coinPriceHistory map[string][]float64) []float64 {
 	ownedCoins := t.OwnedCoins()
-	sumAllCoins := make([]float32, len(GetTraderDollarValueForCoin(t, "bitcoin", coinPriceHistory)))
+	sumAllCoins := make([]float64, len(GetTraderDollarValueForCoin(t, "bitcoin", coinPriceHistory)))
 	for _, c := range ownedCoins {
 		oneCoinHistory := GetTraderDollarValueForCoin(t, c, coinPriceHistory)
 		for i, _ := range oneCoinHistory {
@@ -177,7 +177,7 @@ func GetTraderDollarValueForAllCoins(t trader.Trader, coinPriceHistory map[strin
 	return sumAllCoins
 }
 
-func FloatToInts(floatArray []float32) []int {
+func FloatToInts(floatArray []float64) []int {
 	intArray := make([]int, len(floatArray))
 	for i, _ := range floatArray {
 		intArray[i] = int(floatArray[i])

@@ -4,15 +4,15 @@ import "fmt"
 
 type Trader struct {
     name string
-    savingsBalance float32
-    savingsBalanceHistory []float32
-    coinBalancesMap map[string]float32
-    coinBalancesHistoryMap map[string][]float32
+    savingsBalance float64
+    savingsBalanceHistory []float64
+    coinBalancesMap map[string]float64
+    coinBalancesHistoryMap map[string][]float64
 }
 
-func New(name string, savingsBalance float32) Trader {
-    t := Trader {name, savingsBalance, make([]float32, 5900), 
-		 make(map[string]float32), make(map[string][]float32, 5900)}
+func New(name string, savingsBalance float64) Trader {
+    t := Trader {name, savingsBalance, make([]float64, 5900), 
+		 make(map[string]float64), make(map[string][]float64, 5900)}
     return t
 }
 
@@ -20,11 +20,11 @@ func (t Trader) Name() string {
     return t.name
 }
 
-func (t Trader) SavingsBalance() float32 {
+func (t Trader) SavingsBalance() float64 {
     return t.savingsBalance
 }
 
-func (t Trader) SavingsBalanceOnDay(daysSinceStart int) float32 {
+func (t Trader) SavingsBalanceOnDay(daysSinceStart int) float64 {
     return t.savingsBalanceHistory[daysSinceStart]
 }
 
@@ -48,7 +48,7 @@ func (t Trader) OwnedCoins() []string {
     return coins
 }
 
-func (t Trader) HistoricBalanceForCoin(coin string) []float32 {
+func (t Trader) HistoricBalanceForCoin(coin string) []float64 {
 	return t.coinBalancesHistoryMap[coin]
 }
 
@@ -56,7 +56,7 @@ func (t Trader) HistoricBalanceForCoin(coin string) []float32 {
 // coinAmount: amount to buy or sell
 // dollarAmount: cost in fiat
 // op: 1 - BUY, 2 - SELL
-func (t Trader) ModifyCoinAndSavingsBalance(coin string, coinAmount float32, dollarAmount float32, op int ) string {
+func (t Trader) ModifyCoinAndSavingsBalance(coin string, coinAmount float64, dollarAmount float64, op int ) string {
   if(op == 1) {
 	current := t.coinBalancesMap[coin]
 	currentSavings := t.savingsBalance
