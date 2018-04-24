@@ -2,6 +2,7 @@ package main
 
 import "fmt"
 import "time"
+import percent "github.com/dariubs/percent"
 import coin "btc-trader-sim/coin"
 import trader "btc-trader-sim/trader"
 import exchange "btc-trader-sim/exchange"
@@ -13,7 +14,7 @@ func main() {
 	//to track the number of days	
 	dayCounter := 0
         //track the total market cap
-        var totalMarketCap float64 = 0.00
+        var totalMarketCap int = 0
 	// the current market trend
 	var marketTrend int = 2 //BULLISH with HYPE 1, BULLISH 2, BEARISH 3, or BEARISH with DOUBT 4, affects market share modifier and launches
 	// array of coins 
@@ -25,22 +26,22 @@ func main() {
 	// array of exchanges
 	exchanges := make([]*exchange.Exchange, 0)
 	// array of exchange valueAdded
-	exchangeValues := make(map[string]float64)
+	exchangeValues := make(map[string]int)
 	// array of maps for storing exchange value history	
-	exchangeValueHistory := make(map[string][]float64)
+	exchangeValueHistory := make(map[string][]int)
 
 	// set up coins
 	// 	{name, symbol, price, trend, minShare, maxShare, currentShare, supply, launchDay}
-	c0 := coin.New("Bitcoin",           "BTC", 0.00, 1, 15, 100, 100,  20000000,       1)
-	c1 := coin.New("LightCoin",         "LGC", 0.00, 1, 2,  30,  2,    55000000,     125)
-	c2 := coin.New("Nethereum", 	    "NTH", 0.00, 1, 5,  75,  5,    100000000,    490)
-	c3 := coin.New("Nethereum Vintage", "NTV", 0.00, 1, 3,  25,  3,    100000000,    855)	
-	c4 := coin.New("Riddle",            "XRD", 0.00, 1, 5,  50,  5,    50000000000, 1220)
-	c5 := coin.New("ZEO",               "ZEO", 0.00, 1, 2,  50,  2,    70000000,    1585)
-	c6 := coin.New("YCash",             "YEC", 0.00, 1, 10, 25,  10,   4000000,     1850)
-	c7 := coin.New("Interstellar",      "ILM", 0.00, 1, 5,  35,  5,    18000000000, 2215)
-	c8 := coin.New("Bitbeets",          "BBT", 0.00, 1, 1,  15,  1,    2000000000,  2580)
-	c9 := coin.New("TRAM",              "TRM", 0.00, 1, 1,  20,  1,    70000000000, 2945)
+	c0 := coin.New("Bitcoin",           "BTC", 0.00, 1, 15, 100, 100,     20,       1)
+	c1 := coin.New("LightCoin",         "LGC", 0.00, 1, 2,  30,  2,       55,     125)
+	c2 := coin.New("Nethereum", 	    "NTH", 0.00, 1, 5,  75,  5,      100,    490)
+	c3 := coin.New("Nethereum Vintage", "NTV", 0.00, 1, 3,  25,  3,      100,    855)	
+	c4 := coin.New("Riddle",            "XRD", 0.00, 1, 5,  50,  5,    50000, 1220)
+	c5 := coin.New("ZEO",               "ZEO", 0.00, 1, 2,  50,  2,       70,    1585)
+	c6 := coin.New("YCash",             "YEC", 0.00, 1, 10, 25,  10,       4,     1850)
+	c7 := coin.New("Interstellar",      "ILM", 0.00, 1, 5,  35,  5,    18000, 2215)
+	c8 := coin.New("Bitbeets",          "BBT", 0.00, 1, 1,  15,  1,     2000,  2580)
+	c9 := coin.New("TRAM",              "TRM", 0.00, 1, 1,  20,  1,    70000, 2945)
 	
 	//add em to our master list
 	coins = append(coins, &c0, &c1, &c2, &c3, &c4, &c5, &c6, &c7, &c8, &c9)
@@ -69,14 +70,14 @@ func main() {
 	coinPriceHistory[c9.Name()] = append(arr1, c9.Price())
 
 	//set up exchanges 
-	e0 := exchange.New("Mt Ganx",   0.00,  250000000000.00, 1)
-	e1 := exchange.New("GDOX",      0.00,  500000000000.00, 366)
-	e2 := exchange.New("BitSaurus", 0.00, 1000000000000.00, 730)
-	e3 := exchange.New("CoinHQ",    0.00, 1500000000000.00, 1095)
-	e4 := exchange.New("Czinance",  0.00, 1000000000000.00, 1460)
-	e5 := exchange.New("Napoleox",  0.00,  750000000000.00, 1825)
-	e6 := exchange.New("YoCoin",    0.00,  250000000000.00, 2190)
-	e7 := exchange.New("CoinHawk",  0.00,  250000000000.00, 2555)	
+	e0 := exchange.New("Mt Ganx",   0,  250, 1)
+	e1 := exchange.New("GDOX",      0,  500, 366)
+	e2 := exchange.New("BitSaurus", 0, 1000, 730)
+	e3 := exchange.New("CoinHQ",    0, 1500, 1095)
+	e4 := exchange.New("Czinance",  0, 1000, 1460)
+	e5 := exchange.New("Napoleox",  0,  750, 1825)
+	e6 := exchange.New("YoCoin",    0,  250, 2190)
+	e7 := exchange.New("CoinHawk",  0,  250, 2555)	
 
 	// add to master list
 	exchanges = append(exchanges, &e0, &e1, &e2, &e3, &e4, &e5, &e6, &e7)
@@ -90,7 +91,7 @@ func main() {
 	exchangeValues[e5.Name()] = e5.ValueAdded()
 	exchangeValues[e6.Name()] = e6.ValueAdded()	
 	exchangeValues[e7.Name()] = e7.ValueAdded()
-	arr2 := make([]float64, 0)
+	arr2 := make([]int, 0)
 	exchangeValueHistory[e0.Name()] = append(arr2, e0.ValueAdded())
 	exchangeValueHistory[e1.Name()] = append(arr2, e1.ValueAdded())
 	exchangeValueHistory[e2.Name()] = append(arr2, e2.ValueAdded())
@@ -122,10 +123,9 @@ func main() {
 	termui.Handle("/sys/kbd/i", func(termui.Event) {
 		currentTime = currentTime.Add(time.Hour * 24 * 1)
 		dayCounter++
-		AdvanceOneDay(coins, exchanges, coinPrices, exchangeValues, coinPriceHistory, coinPriceHistory, dayCounter, totalMarketCap, 						marketTrend)
+		AdvanceOneDay(coins, exchanges, coinPrices, exchangeValues, coinPriceHistory, exchangeValueHistory, dayCounter, totalMarketCap, 						marketTrend)
 	
 		// Short term dollar amounts, or estimate of day until launch
-
 		shorttermhisttitle0 := ShortTermCoinTitle(coins[0], dayCounter)
 		shorttermhist0 := termui.NewSparkline()
 		shorttermhist0.Data = FloatToInts(GetHistoricPriceDataForCoin("Bitcoin", coinPriceHistory))
@@ -192,22 +192,107 @@ func main() {
 					shorttermhist6, shorttermhist7, shorttermhist8,
 					shorttermhist9)
 		shorttermhistograms.Height = 20
-		shorttermhistograms.Width = 28
+		shorttermhistograms.Width = 32
 		shorttermhistograms.Y = 12
-		shorttermhistograms.X = 68
+		shorttermhistograms.X = 64
 		shorttermhistograms.BorderLabel = "Short Term $ History"
-
-	// single
-        singledata := FloatToInts(GetHistoricPriceDataForCoin("bitcoin", coinPriceHistory))
-	single0 := termui.NewSparkline()
-	single0.Data = singledata
-	single0.Title = "Test"
-	single0.LineColor = termui.ColorCyan
 		
-	singlespl0 := termui.NewSparklines(single0)
-	singlespl0.Height = 6
-	singlespl0.Width = 20
-	singlespl0.Border = false
+		//List of exchanges - presented as gauges of total cap
+		exchangeGauge0 := termui.NewGauge()
+		exchangeGauge0.Percent = ExchangeInfoPercent(exchanges[0])
+		exchangeGauge0.Width = 28
+		exchangeGauge0.Height = 3
+		exchangeGauge0.Y = 0
+		exchangeGauge0.X = 0
+		exchangeGauge0.BorderLabel = ExchangeInfoString(exchanges[0], dayCounter)
+		exchangeGauge0.Label = ExchangeInfoLabel(exchanges[0])
+		exchangeGauge0.BarColor = termui.ColorMagenta
+		exchangeGauge0.BorderFg = termui.ColorWhite
+		exchangeGauge0.LabelAlign = termui.AlignRight
+
+		exchangeGauge1 := termui.NewGauge()
+		exchangeGauge1.Percent = ExchangeInfoPercent(exchanges[1])
+		exchangeGauge1.Width = 28
+		exchangeGauge1.Height = 3
+		exchangeGauge1.Y = 3
+		exchangeGauge1.X = 0
+		exchangeGauge1.BorderLabel = ExchangeInfoString(exchanges[1], dayCounter)
+		exchangeGauge1.Label = ExchangeInfoLabel(exchanges[1])
+		exchangeGauge1.BarColor = termui.ColorMagenta
+		exchangeGauge1.BorderFg = termui.ColorWhite
+		exchangeGauge1.LabelAlign = termui.AlignRight
+		
+		exchangeGauge2 := termui.NewGauge()
+		exchangeGauge2.Percent = ExchangeInfoPercent(exchanges[2])
+		exchangeGauge2.Width = 28
+		exchangeGauge2.Height = 3
+		exchangeGauge2.Y = 6
+		exchangeGauge2.X = 0
+		exchangeGauge2.BorderLabel = ExchangeInfoString(exchanges[2], dayCounter)
+		exchangeGauge2.Label = ExchangeInfoLabel(exchanges[2])
+		exchangeGauge2.BarColor = termui.ColorMagenta
+		exchangeGauge2.BorderFg = termui.ColorWhite
+		exchangeGauge2.LabelAlign = termui.AlignRight
+
+		exchangeGauge3 := termui.NewGauge()
+		exchangeGauge3.Percent = ExchangeInfoPercent(exchanges[3])
+		exchangeGauge3.Width = 28
+		exchangeGauge3.Height = 3
+		exchangeGauge3.Y = 9
+		exchangeGauge3.X = 0
+		exchangeGauge3.BorderLabel = ExchangeInfoString(exchanges[3], dayCounter)
+		exchangeGauge3.Label = ExchangeInfoLabel(exchanges[3])
+		exchangeGauge3.BarColor = termui.ColorMagenta
+		exchangeGauge3.BorderFg = termui.ColorWhite
+		exchangeGauge3.LabelAlign = termui.AlignRight
+
+		exchangeGauge4 := termui.NewGauge()
+		exchangeGauge4.Percent = ExchangeInfoPercent(exchanges[4])
+		exchangeGauge4.Width = 28
+		exchangeGauge4.Height = 3
+		exchangeGauge4.Y = 12
+		exchangeGauge4.X = 0
+		exchangeGauge4.BorderLabel = ExchangeInfoString(exchanges[4], dayCounter)
+		exchangeGauge4.Label = ExchangeInfoLabel(exchanges[4])
+		exchangeGauge4.BarColor = termui.ColorMagenta
+		exchangeGauge4.BorderFg = termui.ColorWhite
+		exchangeGauge4.LabelAlign = termui.AlignRight
+
+		exchangeGauge5 := termui.NewGauge()
+		exchangeGauge5.Percent = ExchangeInfoPercent(exchanges[5])
+		exchangeGauge5.Width = 28
+		exchangeGauge5.Height = 3
+		exchangeGauge5.Y = 15
+		exchangeGauge5.X = 0
+		exchangeGauge5.BorderLabel = ExchangeInfoString(exchanges[5], dayCounter)
+		exchangeGauge5.Label = ExchangeInfoLabel(exchanges[5])
+		exchangeGauge5.BarColor = termui.ColorMagenta
+		exchangeGauge5.BorderFg = termui.ColorWhite
+		exchangeGauge5.LabelAlign = termui.AlignRight
+
+		exchangeGauge6 := termui.NewGauge()
+		exchangeGauge6.Percent = ExchangeInfoPercent(exchanges[6])
+		exchangeGauge6.Width = 28
+		exchangeGauge6.Height = 3
+		exchangeGauge6.Y = 18
+		exchangeGauge6.X = 0
+		exchangeGauge6.BorderLabel = ExchangeInfoString(exchanges[6], dayCounter)
+		exchangeGauge6.Label = ExchangeInfoLabel(exchanges[6])
+		exchangeGauge6.BarColor = termui.ColorMagenta
+		exchangeGauge6.BorderFg = termui.ColorWhite
+		exchangeGauge6.LabelAlign = termui.AlignRight
+
+		exchangeGauge7 := termui.NewGauge()
+		exchangeGauge7.Percent = ExchangeInfoPercent(exchanges[7])
+		exchangeGauge7.Width = 28
+		exchangeGauge7.Height = 3
+		exchangeGauge7.Y = 21
+		exchangeGauge7.X = 0
+		exchangeGauge7.BorderLabel = ExchangeInfoString(exchanges[7], dayCounter)
+		exchangeGauge7.Label = ExchangeInfoLabel(exchanges[7])
+		exchangeGauge7.BarColor = termui.ColorMagenta
+		exchangeGauge7.BorderFg = termui.ColorWhite
+		exchangeGauge7.LabelAlign = termui.AlignRight
 	
 	par1 := termui.NewPar(currentTime.Format("01-02-2006"))
 	par1.Height = 1
@@ -222,23 +307,25 @@ func main() {
 	par3.X = 20
 	par3.Y = 10
 	par3.Border = false		
-	termui.Render(shorttermhistograms, singlespl0, par1, par3)
+	termui.Render( shorttermhistograms, par1, par3, exchangeGauge0, exchangeGauge1, exchangeGauge2, exchangeGauge3,
+				exchangeGauge4, exchangeGauge5, exchangeGauge6, exchangeGauge7)
 	})
 
 	termui.Loop()
 
 }
 
-func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrices map[string]float64, exchangeValues map[string]float64, 			coinPriceHistory map[string][]float64, exchangeValueHistory map[string][]float64, dayCounter int, totalMarketCap float64, marketTrend int) {
+func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrices map[string]float64, exchangeValues map[string]int, 			coinPriceHistory map[string][]float64, exchangeValueHistory map[string][]int, dayCounter int, totalMarketCap int, marketTrend int) {
 	//save today's exchange valueAdded for all exchanges
 	//find new exchange valueAdded for all exchanges
 	for _, e := range exchanges {
-	    currentValueHistory := exchangeValueHistory[e.Name()]
-	    delete(exchangeValueHistory, e.Name())
-	    exchangeValueHistory[e.Name()] = append(currentValueHistory, exchangeValues[e.Name()])
-	    exchangeValues[e.Name()] = e.DailyValueAdjustment(totalMarketCap, marketTrend)
 	    if(e.LaunchDay() > dayCounter) {
 	    	e.DailyLaunchAdjustment(marketTrend)
+	    } else {
+	        currentValueHistory := exchangeValueHistory[e.Name()]
+	        delete(exchangeValueHistory, e.Name())
+	        exchangeValueHistory[e.Name()] = append(currentValueHistory, exchangeValues[e.Name()])
+	        exchangeValues[e.Name()] = e.DailyValueAdjustment(totalMarketCap, marketTrend)
 	    }
 	}			
 
@@ -256,16 +343,38 @@ func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrice
 
 }
 
-func ShortTermCoinTitle(coin *coin.Coin, dayCounter int) string {
-	shorttermhisttitle := ""
-	
-	if(coin.LaunchDay() > dayCounter) {
-		shorttermhisttitle = fmt.Sprintf("%s - ETA %d days", coin.Symbol(), coin.LaunchDay())
+func ExchangeInfoString(exchange *exchange.Exchange, dayCounter int) string {
+	exchangeInfo := ""
+
+	if(exchange.LaunchDay() > dayCounter) {
+		exchangeInfo = fmt.Sprintf("%s ETA %d days", exchange.Name(), exchange.LaunchDay())
 	} else {
-		shorttermhisttitle = fmt.Sprintf("%s - $%.2f ", coin.Symbol(), coin.Price())
+		exchangeInfo = fmt.Sprintf("%s value: $%d B", exchange.Name(), exchange.ValueAdded())
 	}
 	
-	return shorttermhisttitle
+	return exchangeInfo
+}
+
+func ExchangeInfoPercent(exchange *exchange.Exchange) int {
+	return int(percent.PercentOf(exchange.ValueAdded(), exchange.MaxValueAdded()))
+}
+
+func ExchangeInfoLabel(exchange *exchange.Exchange) string {
+	exchangeLabel := ""
+	exchangeLabel = fmt.Sprintf(" of $%dB", exchange.MaxValueAdded())
+	return exchangeLabel
+}
+
+func ShortTermCoinTitle(coin *coin.Coin, dayCounter int) string {
+	title := ""
+	
+	if(coin.LaunchDay() > dayCounter) {
+		title = fmt.Sprintf("%s - ETA %d days", coin.Symbol(), coin.LaunchDay())
+	} else {
+		title = fmt.Sprintf("%s - $%.2f ", coin.Symbol(), coin.Price())
+	}
+	
+	return title
 }
 
 func GetHistoricPriceDataForCoin(coin string, coinPriceHistory map[string][]float64) []float64 {

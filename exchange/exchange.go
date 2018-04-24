@@ -5,12 +5,12 @@ import "math/rand"
 
 type Exchange struct {
     name string
-    valueAdded float64
-    maxValueAdded float64
+    valueAdded int
+    maxValueAdded int
     launchDay int
 }
 
-func New(name string, valueAdded float64, maxValueAdded float64, launchDay int) Exchange {
+func New(name string, valueAdded int, maxValueAdded int, launchDay int) Exchange {
     e := Exchange {name, valueAdded, maxValueAdded, launchDay}
     return e
 }
@@ -23,19 +23,19 @@ func (e Exchange) Name() string {
     return e.name
 }
 
-func (e Exchange) ValueAdded() float64 {
+func (e Exchange) ValueAdded() int {
     return e.valueAdded
 }
 
-func (e *Exchange) SetValueAdded(valueAdded float64) {
+func (e *Exchange) SetValueAdded(valueAdded int) {
     e.valueAdded = valueAdded
 }
 
-func (e Exchange) MaxValueAdded() float64 {
+func (e Exchange) MaxValueAdded() int {
     return e.maxValueAdded
 }
 
-func (e *Exchange) SetMaxValueAdded(maxValueAdded float64) {
+func (e *Exchange) SetMaxValueAdded(maxValueAdded int) {
     e.maxValueAdded = maxValueAdded
 }
 
@@ -52,15 +52,27 @@ func random(min, max int) int {
     return rand.Intn(max - min) + min
 }
 
-func (e *Exchange) DailyValueAdjustment(totalMarketCap float64, marketTrend int) float64 {
+func (e *Exchange) DailyValueAdjustment(totalMarketCap int, marketTrend int) int {
 	if (marketTrend == 1) {
-
+	    dailyIncrease := 10
+	    e.SetValueAdded(e.ValueAdded() + dailyIncrease)
 	} else if (marketTrend == 2) {
-
+	    dailyIncrease := 10
+	    e.SetValueAdded(e.ValueAdded() + dailyIncrease)
 	} else if (marketTrend == 3) {
-
-	} else {
-
+	    dailyDecrease := 1
+	    if (dailyDecrease > e.ValueAdded()) {
+		e.SetValueAdded(0)
+	    } else {
+		e.SetValueAdded(e.ValueAdded() - dailyDecrease)
+	    }
+	} else {	
+	    dailyDecrease := 1
+	    if (dailyDecrease > e.ValueAdded()) {
+		e.SetValueAdded(0)
+	    } else {
+		e.SetValueAdded(e.ValueAdded() - dailyDecrease)
+	    }
 	}
 	return e.ValueAdded()
 }
