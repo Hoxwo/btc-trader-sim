@@ -1,28 +1,52 @@
 -- Exchanges
-  - MtGanx
-  - GDOX
-  - Bitsaurus 
-  - Czinance
-  - CoinHQ
-  - CoinHawk
-  - Napoleox
-  - UCOIN
-  -   
+  - MtGanx (250 billion)
+  - GDOX (500 billion)   [.75 trillion]
+  - Bitsaurus (750 billion) [1.5 trillion]
+  - CoinHQ   (1.5 trillion) [3 trillion]
+  - Czinance (1 trillion)   [4 trillion]
+  - Napoleox (1 trillion)   [5 trillion]
+  - YoCoin   (250 billion)  [5.25 trillion]
+  - CoinHawk (250 billion)  [5.5 trillion]
+
+--Events
+  - MtGanx Hack
+  - 1 in 10 chance for YoCoin/CoinHawk to go down 
+  - 1 in 10 chance for any coin to fail from bad press/scam
+  - 
 
 -- Coins
   - Bitcoin (BTC)
-    - Capacity 21,000,000
+    - Supply 20,000,000
+    -- Market Share: 15-80%
   - Nethereum (NTH)
+    - Supply 100,000,000
+    -- Market Share: 5-65%
   - Nethereum Vintage (NTV) 
+    - Supply 100,000,000
+    -- Market Share: 3-25%
   - ZEO (ZEO)
+    - Supply 70,000,000
+    -- Market Share: 2-50%
+  - LightCoin (LGC)
+    - Supply 55,000,000
+    -- Market Share: 2-30%
   - riddle (XRD)
-  - AntBytes (ANB)
+    - Supply 50,000,000,000
+    -- Market Share: 5-50%
   - Bitbeets (BBT)
+    - Supply 2,000,000,000
+    -- Market Share: 1-15%
   - TRAM (TRM)
+    - Supply 70,000,000,000
+    - Market Share: 1-20%
+  - YCash (YEC)
+    - Supply 4,000,000
+    - Market Share: 10-25%
+  - Interstellar (ILM)
+    - Supply 18,000,000,000
+    -- Market Share: 5-35%
 
--- Traders
-  - E-celeb
-  - NEET
-  - Whale
-  - Former Professional
-
+-- Game runs from 2010 - 2025, or when the total market cap hits 5 trillion
+    - New exchanges are added, bullish or bearish will 
+    - Coin reaching top of market share will veer bearish; bottom will veer bullish
+    - New exchange opens every year, capcity works up to their threshold
