@@ -94,66 +94,68 @@ func main() {
 		currentTime.AddDate(0, 0, 1)
 		dayCounter++
 		AdvanceOneDay(coins, coinPrices, coinPriceHistory, dayCounter, totalMarketCap)
-	//////
-	shorttermhist0 := termui.NewSparkline()
-	shorttermhist0.Data = FloatToInts(GetHistoricPriceDataForCoin("Bitcoin", coinPriceHistory))
-	shorttermhist0.Title = "BTC"
-	shorttermhist0.LineColor = termui.ColorGreen
+	
+		// Short term dollar amounts, or estimate of day until ICO
+		shorttermhist0 := termui.NewSparkline()
+		shorttermhist0.Data = FloatToInts(GetHistoricPriceDataForCoin("Bitcoin", coinPriceHistory))
+		shorttermhist0.Title = "BTC"
+		shorttermhist0.LineColor = termui.ColorGreen
 
-	shorttermhist1 := termui.NewSparkline()
-	shorttermhist1.Data = FloatToInts(GetHistoricPriceDataForCoin("Lightcoin", coinPriceHistory))
-	shorttermhist1.Title = "LGC"
-	shorttermhist1.LineColor = termui.ColorCyan
+		shorttermhist1 := termui.NewSparkline()
+		shorttermhist1.Data = FloatToInts(GetHistoricPriceDataForCoin("Lightcoin", coinPriceHistory))
+		shorttermhist1.Title = "LGC"
+		shorttermhist1.LineColor = termui.ColorCyan
 
-	shorttermhist2 := termui.NewSparkline()
-	shorttermhist2.Data = FloatToInts(GetHistoricPriceDataForCoin("Nethereum", coinPriceHistory))
-	shorttermhist2.Title = "NTH"
-	shorttermhist2.LineColor = termui.ColorMagenta
+		shorttermhist2 := termui.NewSparkline()
+		shorttermhist2.Data = FloatToInts(GetHistoricPriceDataForCoin("Nethereum", coinPriceHistory))
+		shorttermhist2.Title = "NTH"
+		shorttermhist2.LineColor = termui.ColorMagenta
 
-	shorttermhist3 := termui.NewSparkline()
-	shorttermhist3.Data = FloatToInts(GetHistoricPriceDataForCoin("Nethereum Vintage", coinPriceHistory))
-	shorttermhist3.Title = "NTV"
-	shorttermhist3.LineColor = termui.ColorGreen
+		shorttermhist3 := termui.NewSparkline()	
+		shorttermhist3.Data = FloatToInts(GetHistoricPriceDataForCoin("Nethereum Vintage", coinPriceHistory))
+		shorttermhist3.Title = "NTV"
+		shorttermhist3.LineColor = termui.ColorGreen
 
-	shorttermhist4 := termui.NewSparkline()
-	shorttermhist4.Data = FloatToInts(GetHistoricPriceDataForCoin("Riddle", coinPriceHistory))
-	shorttermhist4.Title = "XRD"
-	shorttermhist4.LineColor = termui.ColorCyan
+		shorttermhist4 := termui.NewSparkline()
+		shorttermhist4.Data = FloatToInts(GetHistoricPriceDataForCoin("Riddle", coinPriceHistory))
+		shorttermhist4.Title = "XRD"
+		shorttermhist4.LineColor = termui.ColorCyan
+	
+		shorttermhist5 := termui.NewSparkline()
+		shorttermhist5.Data = FloatToInts(GetHistoricPriceDataForCoin("ZEO", coinPriceHistory))
+		shorttermhist5.Title = "ZEO"
+		shorttermhist5.LineColor = termui.ColorMagenta
+	
+		shorttermhist6 := termui.NewSparkline()
+		shorttermhist6.Data = FloatToInts(GetHistoricPriceDataForCoin("YCash", coinPriceHistory))
+		shorttermhist6.Title = "YEC"
+		shorttermhist6.LineColor = termui.ColorGreen
+	
+		shorttermhist7 := termui.NewSparkline()
+		shorttermhist7.Data = FloatToInts(GetHistoricPriceDataForCoin("Intersteller", coinPriceHistory))
+		shorttermhist7.Title = "ILM"
+		shorttermhist7.LineColor = termui.ColorCyan
+	
+		shorttermhist8 := termui.NewSparkline()
+		shorttermhist8.Data = FloatToInts(GetHistoricPriceDataForCoin("Bitbeets", coinPriceHistory))
+		shorttermhist8.Title = "BBT"
+		shorttermhist8.LineColor = termui.ColorMagenta
 
-	shorttermhist5 := termui.NewSparkline()
-	shorttermhist5.Data = FloatToInts(GetHistoricPriceDataForCoin("ZEO", coinPriceHistory))
-	shorttermhist5.Title = "ZEO"
-	shorttermhist5.LineColor = termui.ColorMagenta
+		shorttermhist9 := termui.NewSparkline()
+		shorttermhist9.Data = FloatToInts(GetHistoricPriceDataForCoin("TRAM", coinPriceHistory))
+		shorttermhist9.Title = "TRM"
+		shorttermhist9.LineColor = termui.ColorGreen
 
-	shorttermhist6 := termui.NewSparkline()
-	shorttermhist6.Data = FloatToInts(GetHistoricPriceDataForCoin("YCash", coinPriceHistory))
-	shorttermhist6.Title = "YEC"
-	shorttermhist6.LineColor = termui.ColorGreen
-
-	shorttermhist7 := termui.NewSparkline()
-	shorttermhist7.Data = FloatToInts(GetHistoricPriceDataForCoin("Intersteller", coinPriceHistory))
-	shorttermhist7.Title = "ILM"
-	shorttermhist7.LineColor = termui.ColorCyan
-
-	shorttermhist8 := termui.NewSparkline()
-	shorttermhist8.Data = FloatToInts(GetHistoricPriceDataForCoin("Bitbeets", coinPriceHistory))
-	shorttermhist8.Title = "BBT"
-	shorttermhist8.LineColor = termui.ColorMagenta
-
-	shorttermhist9 := termui.NewSparkline()
-	shorttermhist9.Data = FloatToInts(GetHistoricPriceDataForCoin("TRAM", coinPriceHistory))
-	shorttermhist9.Title = "TRM"
-	shorttermhist9.LineColor = termui.ColorGreen
-
-	// group
-	spls1 := termui.NewSparklines(shorttermhist0, shorttermhist1, shorttermhist2, 
+		// put them together
+		shorttermhistograms := termui.NewSparklines(shorttermhist0, shorttermhist1, shorttermhist2, 
 					shorttermhist3, shorttermhist4, shorttermhist5,
 					shorttermhist6, shorttermhist7, shorttermhist8,
 					shorttermhist9)
-	spls1.Height = 35
-	spls1.Width = 26
-	spls1.Y = 16
-	spls1.BorderLabel = "Short Term $ History"
+		shorttermhistograms.Height = 20
+		shorttermhistograms.Width = 24
+		shorttermhistograms.Y = 12
+		shorttermhistograms.X = 50
+		shorttermhistograms.BorderLabel = "Short Term $ History"
 
 	// single
         singledata := FloatToInts(GetHistoricPriceDataForCoin("bitcoin", coinPriceHistory))
@@ -169,8 +171,8 @@ func main() {
 	
 	par1 := termui.NewPar(currentTime.Format("01-02-2006"))
 	par1.Height = 1
-	par1.Width = 50
-	par1.X = 50
+	par1.Width = 20
+	par1.X = 16
 	par1.Y = 12
 	par1.Border = false
 
@@ -180,7 +182,7 @@ func main() {
 	par3.X = 20
 	par3.Y = 10
 	par3.Border = false		
-	termui.Render(spls1, singlespl0, par1, par3)
+	termui.Render(shorttermhistograms, singlespl0, par1, par3)
 	})
 
 	termui.Loop()
