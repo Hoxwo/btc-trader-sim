@@ -15,8 +15,6 @@ func main() {
 	dayCounter := 0
         //track the total market cap
         var totalMarketCap int = 0
-	//historic total market cap
-	totalMarketCapHistory := make([]int, 5900)
 	// the current market trend
 	var marketTrend int = 2 //BULLISH with HYPE 1, BULLISH 2, BEARISH 3, or BEARISH with DOUBT 4, affects market share modifier and launches
 	// array of coins 
@@ -30,7 +28,7 @@ func main() {
 	// array of exchange valueAdded
 	exchangeValues := make(map[string]int)
 	// array of maps for storing exchange value history	
-	exchangeValueHistory := make(map[string][]int)
+	exchangeValueHistory := make(map[string][]int, 8)
 
 	// set up coins
 	// 	{name, symbol, price, trend, minShare, maxShare, currentShare, supply, launchDay}
@@ -74,12 +72,12 @@ func main() {
 	//set up exchanges 
 	e0 := exchange.New("Mt Ganx",   0,  250, 1)
 	e1 := exchange.New("GDOX",      0,  500, 100)
-	e2 := exchange.New("BitSaurus", 0, 1000, 200)
-	e3 := exchange.New("CoinHQ",    0, 1500, 1095)
-	e4 := exchange.New("Czinance",  0, 1000, 1460)
-	e5 := exchange.New("Napoleox",  0,  750, 1825)
-	e6 := exchange.New("YoCoin",    0,  250, 2190)
-	e7 := exchange.New("CoinHawk",  0,  250, 2555)	
+	e2 := exchange.New("BitSaurus", 0, 1000, 2000)
+	e3 := exchange.New("CoinHQ",    0, 1500, 3000)
+	e4 := exchange.New("Czinance",  0, 1000, 3500)
+	e5 := exchange.New("Napoleox",  0,  750, 4000)
+	e6 := exchange.New("YoCoin",    0,  250, 5000)
+	e7 := exchange.New("CoinHawk",  0,  250, 5000)	
 
 	// add to master list
 	exchanges = append(exchanges, &e0, &e1, &e2, &e3, &e4, &e5, &e6, &e7)
@@ -125,7 +123,7 @@ func main() {
 	termui.Handle("/sys/kbd/i", func(termui.Event) {
 		currentTime = currentTime.Add(time.Hour * 24 * 1)
 		dayCounter++
-		AdvanceOneDay(coins, exchanges, coinPrices, exchangeValues, coinPriceHistory, exchangeValueHistory, dayCounter, totalMarketCap, 						marketTrend, totalMarketCapHistory)
+		totalMarketCap = AdvanceOneDay(coins, exchanges, coinPrices, exchangeValues, coinPriceHistory, exchangeValueHistory, 										dayCounter, marketTrend)
 	
 		// Short term dollar amounts, or estimate of day until launch
 		shorttermhisttitle0 := ShortTermCoinTitle(coins[0], dayCounter)
@@ -297,7 +295,7 @@ func main() {
 		exchangeGauge7.LabelAlign = termui.AlignRight
 
 		marketCap := termui.NewLineChart()
-		marketCap.BorderLabel = MarketCapInfoString(totalMarketCapHistory, dayCounter)
+		marketCap.BorderLabel = MarketCapInfoString(totalMarketCap)
 		marketCap.Data = GetHistoricTotalMarketCapAsFloatArray(exchangeValueHistory)	
 		marketCap.Width = 28
 		marketCap.Height = 12
@@ -309,14 +307,14 @@ func main() {
 	par1 := termui.NewPar(currentTime.Format("01-02-2006"))
 	par1.Height = 1
 	par1.Width = 20
-	par1.X = 16
+	par1.X = 34
 	par1.Y = 12
 	par1.Border = false
 
-	par3 := termui.NewPar(fmt.Sprintf("days %d", dayCounter))
+	par3 := termui.NewPar(fmt.Sprintf("days %v", GetHistoricTotalMarketCapAsIntArray(exchangeValueHistory)[dayCounter-1]))
 	par3.Height = 1
 	par3.Width = 20
-	par3.X = 20
+	par3.X = 34
 	par3.Y = 10
 	par3.Border = false		
 	
@@ -328,9 +326,12 @@ func main() {
 
 }
 
-func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrices map[string]float64, exchangeValues map[string]int, 			coinPriceHistory map[string][]float64, exchangeValueHistory map[string][]int, dayCounter int, totalMarketCap int, marketTrend int, 				totalMarketCapHistory []int) {
-	//save totalMarketCap
-	totalMarketCapHistory[dayCounter] = totalMarketCap
+func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrices map[string]float64, exchangeValues map[string]int, 			coinPriceHistory map[string][]float64, exchangeValueHistory map[string][]int, dayCounter int, marketTrend int) int {
+	//compute totalMarketCap
+	totalCap := 0
+	for _, e := range exchanges {
+		totalCap = totalCap + e.ValueAdded()
+	}
 	
 	//save today's exchange valueAdded for all exchanges
 	//find new exchange valueAdded for all exchanges
@@ -341,7 +342,7 @@ func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrice
 	        currentValueHistory := exchangeValueHistory[e.Name()]
 	        delete(exchangeValueHistory, e.Name())
 	        exchangeValueHistory[e.Name()] = append(currentValueHistory, exchangeValues[e.Name()])
-	        exchangeValues[e.Name()] = e.DailyValueAdjustment(totalMarketCap, marketTrend)
+	        exchangeValues[e.Name()] = e.DailyValueAdjustment(totalCap, marketTrend)
 	    }
 	}			
 
@@ -351,19 +352,18 @@ func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrice
 	    currentPriceHistory := coinPriceHistory[c.Name()]
 	    delete(coinPriceHistory, c.Name())
 	    coinPriceHistory[c.Name()] = append(currentPriceHistory, coinPrices[c.Name()])
-	    coinPrices[c.Name()] = c.DailyPriceAdjustment(totalMarketCap)
+	    coinPrices[c.Name()] = c.DailyPriceAdjustment(totalCap)
 	    if(c.LaunchDay() > dayCounter) {
 	    	c.DailyLaunchAdjustment(marketTrend)
 	    }
 	}		
 
+	return totalCap
 }
 
-func MarketCapInfoString(exchangeValueHistory map[string][]int, dayCounter int) string {
-	fullHistory := GetHistoricTotalMarketCapAsIntArray(exchangeValueHistory)
-	currentCap := totalMarketCapHistory[dayCounter-1]
-	maxCap := 55000
-	marketCapInfo := fmt.Sprintf("$%dB/$%dB", currentCap, maxCap)
+func MarketCapInfoString(totalMarketCap int) string {
+	maxCap := 5000
+	marketCapInfo := fmt.Sprintf("$%dB/$%dB", totalMarketCap, maxCap)
 	return marketCapInfo
 }
 
@@ -404,7 +404,12 @@ func ShortTermCoinTitle(coin *coin.Coin, dayCounter int) string {
 func GetHistoricTotalMarketCapAsFloatArray(exchangeValueHistory map[string][]int) []float64 {
 	totalMarketCap := make([]float64, 5900)
 
-    	for k := range exchangeValueHistory {
+	keys := make([]string, 0, len(exchangeValueHistory))
+	for k := range exchangeValueHistory {
+    	        keys = append(keys, k)
+    	}
+
+    	for _, k := range keys {
        		oneExchangeHistoricValue := exchangeValueHistory[k]
 		for i, _ := range oneExchangeHistoricValue {
 			totalMarketCap[i] = totalMarketCap[i] + float64(oneExchangeHistoricValue[i])
@@ -417,7 +422,12 @@ func GetHistoricTotalMarketCapAsFloatArray(exchangeValueHistory map[string][]int
 func GetHistoricTotalMarketCapAsIntArray(exchangeValueHistory map[string][]int) []int {
 	totalMarketCap := make([]int, 5900)
 
-    	for k := range exchangeValueHistory {
+	keys := make([]string, 0, len(exchangeValueHistory))
+	for k := range exchangeValueHistory {
+    	        keys = append(keys, k)
+    	}
+
+    	for _, k := range keys {
        		oneExchangeHistoricValue := exchangeValueHistory[k]
 		for i, _ := range oneExchangeHistoricValue {
 			totalMarketCap[i] = totalMarketCap[i] + oneExchangeHistoricValue[i]
