@@ -39,6 +39,10 @@ func main() {
 	news := ""
 	//news History
 	newsHistory := make([]string,0)
+	//index of Selected Coin
+	selected := 0
+	// current state
+	state := 1 // 1 - watching, 2 - buying, 3 - selling
 
 	// set up coins
 	// 	       {name,              symbol, price, supply,     launchDay}
@@ -59,6 +63,8 @@ func main() {
 	
 	//add em to our master list
 	coins = append(coins, &c0, &c1, &c2, &c3, &c4, &c5, &c6, &c7, &c8, &c9, &c10, &c11, &c12, &c13)
+	//select BTC
+	selected = 0
 	
 	//start the price and history tracking	
 	coinPrices[c0.Name()] = c0.Price()
@@ -158,7 +164,30 @@ func main() {
 		termui.StopLoop()
 	})
 
-	termui.Handle("/sys/kbd/i", func(termui.Event) {
+	termui.Handle("/sys/kbd/b", func(termui.Event) {
+		//player buy
+		state = 2
+	})
+	
+	termui.Handle("/sys/kbd/s", func(termui.Event) {
+		//player sell
+		state = 3
+	})
+
+	termui.Handle("/sys/kbd/k", func(termui.Event) {
+		if(selected > 0) {		
+			selected--
+		}
+	})
+
+	termui.Handle("/sys/kbd/m", func(termui.Event) {
+		if(selected < 13) {		
+			selected++
+		}
+	})
+	
+
+	termui.Handle("/timer/1s", func(termui.Event) {
 		currentTime = currentTime.Add(time.Hour * 24 * 1)
 		dayCounter++
 		marketTrend = 1
@@ -169,87 +198,104 @@ func main() {
 		}
 		
 		totalMarketCap = AdvanceOneDay(coins, exchanges, coinPrices, exchangeValues, coinPriceHistory, exchangeValueHistory, 							    coinMarketShares, dayCounter, marketTrend, news, &newsHistory)
+		
+		//selected coin info	
+		selectedInfo := termui.NewPar("")
+		if(state == 1) {		
+			selectedInfo = termui.NewPar(SelectedCoinTextState1(coins, selected))
+		} else if(state == 2) {
+			selectedInfo = termui.NewPar(SelectedCoinTextState2(coins, selected))
+		} else {
+			selectedInfo = termui.NewPar(SelectedCoinTextState3(coins, selected))
+		}
+		selectedInfo.Height = 10
+		selectedInfo.Width = 20
+		selectedInfo.X = 32
+		selectedInfo.Y = 14
+		selectedInfo.BorderLabel = ""
+		selectedInfo.BorderFg = termui.ColorCyan
+		selectedInfo.TextFgColor = termui.ColorGreen
 	
 		// Short term dollar amounts, or estimate of day until launch
-		shorttermhisttitle0 := ShortTermCoinTitle(coins[0], dayCounter)
+		shorttermhisttitle0 := ShortTermCoinTitle(coins[0], dayCounter, 0, selected)
 		shorttermhist0 := termui.NewSparkline()
 		shorttermhist0.Data = FloatToInts(GetHistoricPriceDataForCoin("Bitcoin", coinPriceHistory))
 		shorttermhist0.Title = shorttermhisttitle0
 		shorttermhist0.LineColor = termui.ColorCyan
 
-		shorttermhisttitle1 := ShortTermCoinTitle(coins[1], dayCounter)
+		shorttermhisttitle1 := ShortTermCoinTitle(coins[1], dayCounter, 1, selected)
 		shorttermhist1 := termui.NewSparkline()
 		shorttermhist1.Data = FloatToInts(GetHistoricPriceDataForCoin("Lightcoin", coinPriceHistory))
 		shorttermhist1.Title = shorttermhisttitle1
 		shorttermhist1.LineColor = termui.ColorGreen
 
-		shorttermhisttitle2 := ShortTermCoinTitle(coins[2], dayCounter)
+		shorttermhisttitle2 := ShortTermCoinTitle(coins[2], dayCounter, 2, selected)
 		shorttermhist2 := termui.NewSparkline()
 		shorttermhist2.Data = FloatToInts(GetHistoricPriceDataForCoin("Nethereum", coinPriceHistory))
 		shorttermhist2.Title = shorttermhisttitle2
 		shorttermhist2.LineColor = termui.ColorMagenta
 
-		shorttermhisttitle3 := ShortTermCoinTitle(coins[3], dayCounter)
+		shorttermhisttitle3 := ShortTermCoinTitle(coins[3], dayCounter, 3, selected)
 		shorttermhist3 := termui.NewSparkline()	
 		shorttermhist3.Data = FloatToInts(GetHistoricPriceDataForCoin("Nethereum Vintage", coinPriceHistory))
 		shorttermhist3.Title = shorttermhisttitle3
 		shorttermhist3.LineColor = termui.ColorCyan
 
-		shorttermhisttitle4 := ShortTermCoinTitle(coins[4], dayCounter)
+		shorttermhisttitle4 := ShortTermCoinTitle(coins[4], dayCounter, 4, selected)
 		shorttermhist4 := termui.NewSparkline()
 		shorttermhist4.Data = FloatToInts(GetHistoricPriceDataForCoin("Riddle", coinPriceHistory))
 		shorttermhist4.Title = shorttermhisttitle4
 		shorttermhist4.LineColor = termui.ColorGreen
 	
-		shorttermhisttitle5 := ShortTermCoinTitle(coins[5], dayCounter)
+		shorttermhisttitle5 := ShortTermCoinTitle(coins[5], dayCounter, 5, selected)
 		shorttermhist5 := termui.NewSparkline()
 		shorttermhist5.Data = FloatToInts(GetHistoricPriceDataForCoin("Ledge", coinPriceHistory))
 		shorttermhist5.Title = shorttermhisttitle5
 		shorttermhist5.LineColor = termui.ColorMagenta
 	
-		shorttermhisttitle6 := ShortTermCoinTitle(coins[6], dayCounter)
+		shorttermhisttitle6 := ShortTermCoinTitle(coins[6], dayCounter, 6, selected)
 		shorttermhist6 := termui.NewSparkline()
 		shorttermhist6.Data = FloatToInts(GetHistoricPriceDataForCoin("Bancem", coinPriceHistory))
 		shorttermhist6.Title = shorttermhisttitle6
 		shorttermhist6.LineColor = termui.ColorCyan
 	
-		shorttermhisttitle7 := ShortTermCoinTitle(coins[7], dayCounter)
+		shorttermhisttitle7 := ShortTermCoinTitle(coins[7], dayCounter, 7, selected)
 		shorttermhist7 := termui.NewSparkline()
 		shorttermhist7.Data = FloatToInts(GetHistoricPriceDataForCoin("ZEO", coinPriceHistory))
 		shorttermhist7.Title = shorttermhisttitle7
 		shorttermhist7.LineColor = termui.ColorGreen
 
-		shorttermhisttitle8 := ShortTermCoinTitle(coins[8], dayCounter)
+		shorttermhisttitle8 := ShortTermCoinTitle(coins[8], dayCounter, 8, selected)
 		shorttermhist8 := termui.NewSparkline()
 		shorttermhist8.Data = FloatToInts(GetHistoricPriceDataForCoin("YCash", coinPriceHistory))
 		shorttermhist8.Title = shorttermhisttitle8
 		shorttermhist8.LineColor = termui.ColorMagenta
 
-		shorttermhisttitle9 := ShortTermCoinTitle(coins[9], dayCounter)
+		shorttermhisttitle9 := ShortTermCoinTitle(coins[9], dayCounter, 9, selected)
 		shorttermhist9 := termui.NewSparkline()
 		shorttermhist9.Data = FloatToInts(GetHistoricPriceDataForCoin("Interstellar", coinPriceHistory))
 		shorttermhist9.Title = shorttermhisttitle9
 		shorttermhist9.LineColor = termui.ColorCyan
 
-		shorttermhisttitle10 := ShortTermCoinTitle(coins[10], dayCounter)
+		shorttermhisttitle10 := ShortTermCoinTitle(coins[10], dayCounter, 10, selected)
 		shorttermhist10 := termui.NewSparkline()
 		shorttermhist10.Data = FloatToInts(GetHistoricPriceDataForCoin("BitBeets", coinPriceHistory))
 		shorttermhist10.Title = shorttermhisttitle10
 		shorttermhist10.LineColor = termui.ColorGreen
 
-		shorttermhisttitle11 := ShortTermCoinTitle(coins[11], dayCounter)
+		shorttermhisttitle11 := ShortTermCoinTitle(coins[11], dayCounter, 11, selected)
 		shorttermhist11 := termui.NewSparkline()
 		shorttermhist11.Data = FloatToInts(GetHistoricPriceDataForCoin("TRAM", coinPriceHistory))
 		shorttermhist11.Title = shorttermhisttitle11
 		shorttermhist11.LineColor = termui.ColorMagenta
 		
-		shorttermhisttitle12 := ShortTermCoinTitle(coins[12], dayCounter)
+		shorttermhisttitle12 := ShortTermCoinTitle(coins[12], dayCounter, 12, selected)
 		shorttermhist12 := termui.NewSparkline()
 		shorttermhist12.Data = FloatToInts(GetHistoricPriceDataForCoin("DigiLink", coinPriceHistory))
 		shorttermhist12.Title = shorttermhisttitle12
 		shorttermhist12.LineColor = termui.ColorCyan
 
-		shorttermhisttitle13 := ShortTermCoinTitle(coins[13], dayCounter)
+		shorttermhisttitle13 := ShortTermCoinTitle(coins[13], dayCounter, 13, selected)
 		shorttermhist13 := termui.NewSparkline()
 		shorttermhist13.Data = FloatToInts(GetHistoricPriceDataForCoin("XTRAbits", coinPriceHistory))
 		shorttermhist13.Title = shorttermhisttitle13
@@ -409,9 +455,9 @@ func main() {
 		if(len(newsHistory) == 0) {		
 			recentNews.Items = make([]string,0)
 		} else if(len(newsHistory) < 10) {
-			recentNews.Items = newsHistory[:len(newsHistory)-1]
+			recentNews.Items = newsHistory[:len(newsHistory)]
 		} else {
-			recentNews.Items = newsHistory[len(newsHistory)-10:len(newsHistory)-1]
+			recentNews.Items = newsHistory[len(newsHistory)-10:len(newsHistory)]
 		}
 		recentNews.ItemFgColor = termui.ColorWhite
 		recentNews.BorderLabel = fmt.Sprintf("Latest News")
@@ -444,11 +490,26 @@ func main() {
 	
 	termui.Render( shorttermhistograms, debug, exchangeGauge0, exchangeGauge1, exchangeGauge2, exchangeGauge3,
 				exchangeGauge4, exchangeGauge5, exchangeGauge6, exchangeGauge7, marketCap, marketShares, 
-				recentNews, sentiment)
+				recentNews, sentiment, selectedInfo)
 	})
 
 	termui.Loop()
 
+}
+
+func SelectedCoinTextState1(coins []*coin.Coin, selected int) string {
+	//show selected coin name, b to buy, s to sell
+	return fmt.Sprintf("%s (%s)\n[b] to buy\n[s] to sell\nplayer quant\n\n[k]select up\n[m]select down",coins[selected].Name(), coins[selected].Symbol())
+}
+
+func SelectedCoinTextState2(coins []*coin.Coin, selected int) string {
+	//show name, quantity, enter quantity to buy, 1-9
+	return fmt.Sprintf("%s (%s)\n[1-9] amount to buy\nplayer quant",coins[selected].Name(), coins[selected].Symbol())
+}
+
+func SelectedCoinTextState3(coins []*coin.Coin, selected int) string {
+	//show name, quantity, enter quantity to sell, 1-9
+	return fmt.Sprintf("%s (%s)\n[1-9] amount to sell\nplayer quant",coins[selected].Name(), coins[selected].Symbol())
 }
 
 func GenerateTweets(coins []*coin.Coin) map[string]int {
@@ -464,7 +525,7 @@ func GenerateTweets(coins []*coin.Coin) map[string]int {
 
 func GenerateNews(coins []*coin.Coin, dayCounter int) string {
 	chanceOfNews := random(1,10) // 1/3 chance of news for a random coin
-	randomIdx := (random(1,16)-1)
+	randomIdx := (random(1,15)-1)
 	news := ""	
 	
 	if(chanceOfNews % 3 == 0) {
@@ -643,16 +704,22 @@ func ExchangeInfoLabel(exchange *exchange.Exchange) string {
 	return exchangeLabel
 }
 
-func ShortTermCoinTitle(coin *coin.Coin, dayCounter int) string {
+func ShortTermCoinTitle(coin *coin.Coin, dayCounter int, coinsIdx int, selected int) string {
 	title := ""
+	cursor := ""
 	
+	if(coinsIdx == selected) {
+		cursor = ">> "
+	}
+
 	if(coin.LaunchDay() > dayCounter) {
-		title = fmt.Sprintf("%s - ETA %d days", coin.Symbol(), (coin.LaunchDay() - dayCounter))
+		title = fmt.Sprintf("%s%s - ETA %d days", cursor, coin.Symbol(), (coin.LaunchDay() - dayCounter))
+		
 	} else {
 		if(coin.Supply() > 1000) {
-			title = fmt.Sprintf("%s - %d Bil - $%.2f", coin.Symbol(), (coin.Supply()/1000), coin.Price())
+			title = fmt.Sprintf("%s%s - %d Bil - $%.2f", cursor, coin.Symbol(), (coin.Supply()/1000), coin.Price())
 		} else {
-			title = fmt.Sprintf("%s - %d Mil - $%.2f", coin.Symbol(), coin.Supply(), coin.Price())
+			title = fmt.Sprintf("%s%s - %d Mil - $%.2f", cursor, coin.Symbol(), coin.Supply(), coin.Price())
 		}
 	}
 	
