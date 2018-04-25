@@ -13,6 +13,8 @@ import termui "github.com/gizak/termui"
 func main() {
 	// set the time to Jan 1st, 2010
 	currentTime := time.Date(2010, time.January, 1, 0, 0, 0, 0, time.UTC)
+	//for randos
+	rand.Seed(time.Now().UTC().UnixNano())
 	//to track the number of days	
 	dayCounter := 0
         //track the total market cap
@@ -50,14 +52,13 @@ func main() {
 	c7 := coin.New("ZEO",               "ZEO",  0.00,      70,       700)
 	c8 := coin.New("YCash",             "YEC",  0.00,       4,       800)
 	c9 := coin.New("Interstellar",      "ILM",  0.00,   18000,       900)
-	c10 := coin.New("Bitbeets",          "BBT",  0.00,    2000,     1000)
+	c10 := coin.New("Bitbeets",          "BBT",  0.00,   2000,      1000)
 	c11 := coin.New("TRAM",             "TRM",  0.00,   70000,      1100)
-	c12 := coin.New("DigiLink",         "DGL", 0.00,     350,       1200)
+	c12 := coin.New("DigiLink",         "DGL", 0.00,      350,      1200)
 	c13 := coin.New("XTRAbits",         "XBI",  0.00,     650,      1300)
-	c14 := coin.New("Silliqa",          "SIL",  0.00,    7000,      1400)
 	
 	//add em to our master list
-	coins = append(coins, &c0, &c1, &c2, &c3, &c4, &c5, &c6, &c7, &c8, &c9, &c10, &c11, &c12, &c13, &c14)
+	coins = append(coins, &c0, &c1, &c2, &c3, &c4, &c5, &c6, &c7, &c8, &c9, &c10, &c11, &c12, &c13)
 	
 	//start the price and history tracking	
 	coinPrices[c0.Name()] = c0.Price()
@@ -74,7 +75,6 @@ func main() {
 	coinPrices[c11.Name()] = c11.Price()
 	coinPrices[c12.Name()] = c12.Price()
 	coinPrices[c13.Name()] = c13.Price()
-	coinPrices[c14.Name()] = c14.Price()
 	arr1 := make([]float64, 0)
 	coinPriceHistory[c0.Name()] = append(arr1, c0.Price())
 	coinPriceHistory[c1.Name()] = append(arr1, c1.Price())
@@ -90,7 +90,6 @@ func main() {
 	coinPriceHistory[c11.Name()] = append(arr1, c11.Price())
 	coinPriceHistory[c12.Name()] = append(arr1, c12.Price())
 	coinPriceHistory[c13.Name()] = append(arr1, c13.Price())
-	coinPriceHistory[c14.Name()] = append(arr1, c14.Price())
 
 	// initialize shares of the market - only BTC at first	
 	coinMarketShares[c0.Name()] = 100
@@ -107,7 +106,6 @@ func main() {
 	coinMarketShares[c11.Name()] = 0
 	coinMarketShares[c12.Name()] = 0
 	coinMarketShares[c13.Name()] = 0
-	coinMarketShares[c14.Name()] = 0
 
 	//set up exchanges  
 	e0 := exchange.New("Mt Ganx",   10,   50,   0)
@@ -164,8 +162,8 @@ func main() {
 		currentTime = currentTime.Add(time.Hour * 24 * 1)
 		dayCounter++
 		marketTrend = 1
-		fourSidedDie := random(1,5,7427)
-		downturnChance := random(1,3,198)
+		fourSidedDie := random(1,5)
+		downturnChance := random(1,3)
 		if (downturnChance == 2) {
 			marketTrend = fourSidedDie
 		}
@@ -177,13 +175,13 @@ func main() {
 		shorttermhist0 := termui.NewSparkline()
 		shorttermhist0.Data = FloatToInts(GetHistoricPriceDataForCoin("Bitcoin", coinPriceHistory))
 		shorttermhist0.Title = shorttermhisttitle0
-		shorttermhist0.LineColor = termui.ColorGreen
+		shorttermhist0.LineColor = termui.ColorCyan
 
 		shorttermhisttitle1 := ShortTermCoinTitle(coins[1], dayCounter)
 		shorttermhist1 := termui.NewSparkline()
 		shorttermhist1.Data = FloatToInts(GetHistoricPriceDataForCoin("Lightcoin", coinPriceHistory))
 		shorttermhist1.Title = shorttermhisttitle1
-		shorttermhist1.LineColor = termui.ColorCyan
+		shorttermhist1.LineColor = termui.ColorGreen
 
 		shorttermhisttitle2 := ShortTermCoinTitle(coins[2], dayCounter)
 		shorttermhist2 := termui.NewSparkline()
@@ -195,13 +193,13 @@ func main() {
 		shorttermhist3 := termui.NewSparkline()	
 		shorttermhist3.Data = FloatToInts(GetHistoricPriceDataForCoin("Nethereum Vintage", coinPriceHistory))
 		shorttermhist3.Title = shorttermhisttitle3
-		shorttermhist3.LineColor = termui.ColorGreen
+		shorttermhist3.LineColor = termui.ColorCyan
 
 		shorttermhisttitle4 := ShortTermCoinTitle(coins[4], dayCounter)
 		shorttermhist4 := termui.NewSparkline()
 		shorttermhist4.Data = FloatToInts(GetHistoricPriceDataForCoin("Riddle", coinPriceHistory))
 		shorttermhist4.Title = shorttermhisttitle4
-		shorttermhist4.LineColor = termui.ColorCyan
+		shorttermhist4.LineColor = termui.ColorGreen
 	
 		shorttermhisttitle5 := ShortTermCoinTitle(coins[5], dayCounter)
 		shorttermhist5 := termui.NewSparkline()
@@ -213,13 +211,13 @@ func main() {
 		shorttermhist6 := termui.NewSparkline()
 		shorttermhist6.Data = FloatToInts(GetHistoricPriceDataForCoin("Bancem", coinPriceHistory))
 		shorttermhist6.Title = shorttermhisttitle6
-		shorttermhist6.LineColor = termui.ColorGreen
+		shorttermhist6.LineColor = termui.ColorCyan
 	
 		shorttermhisttitle7 := ShortTermCoinTitle(coins[7], dayCounter)
 		shorttermhist7 := termui.NewSparkline()
 		shorttermhist7.Data = FloatToInts(GetHistoricPriceDataForCoin("ZEO", coinPriceHistory))
 		shorttermhist7.Title = shorttermhisttitle7
-		shorttermhist7.LineColor = termui.ColorCyan
+		shorttermhist7.LineColor = termui.ColorGreen
 
 		shorttermhisttitle8 := ShortTermCoinTitle(coins[8], dayCounter)
 		shorttermhist8 := termui.NewSparkline()
@@ -231,13 +229,13 @@ func main() {
 		shorttermhist9 := termui.NewSparkline()
 		shorttermhist9.Data = FloatToInts(GetHistoricPriceDataForCoin("Interstellar", coinPriceHistory))
 		shorttermhist9.Title = shorttermhisttitle9
-		shorttermhist9.LineColor = termui.ColorGreen
+		shorttermhist9.LineColor = termui.ColorCyan
 
 		shorttermhisttitle10 := ShortTermCoinTitle(coins[10], dayCounter)
 		shorttermhist10 := termui.NewSparkline()
 		shorttermhist10.Data = FloatToInts(GetHistoricPriceDataForCoin("BitBeets", coinPriceHistory))
 		shorttermhist10.Title = shorttermhisttitle10
-		shorttermhist10.LineColor = termui.ColorCyan
+		shorttermhist10.LineColor = termui.ColorGreen
 
 		shorttermhisttitle11 := ShortTermCoinTitle(coins[11], dayCounter)
 		shorttermhist11 := termui.NewSparkline()
@@ -249,26 +247,20 @@ func main() {
 		shorttermhist12 := termui.NewSparkline()
 		shorttermhist12.Data = FloatToInts(GetHistoricPriceDataForCoin("DigiLink", coinPriceHistory))
 		shorttermhist12.Title = shorttermhisttitle12
-		shorttermhist12.LineColor = termui.ColorMagenta
+		shorttermhist12.LineColor = termui.ColorCyan
 
 		shorttermhisttitle13 := ShortTermCoinTitle(coins[13], dayCounter)
 		shorttermhist13 := termui.NewSparkline()
 		shorttermhist13.Data = FloatToInts(GetHistoricPriceDataForCoin("XTRAbits", coinPriceHistory))
 		shorttermhist13.Title = shorttermhisttitle13
-		shorttermhist13.LineColor = termui.ColorMagenta
-
-		shorttermhisttitle14 := ShortTermCoinTitle(coins[14], dayCounter)
-		shorttermhist14 := termui.NewSparkline()
-		shorttermhist14.Data = FloatToInts(GetHistoricPriceDataForCoin("Silliqa", coinPriceHistory))
-		shorttermhist14.Title = shorttermhisttitle14
-		shorttermhist14.LineColor = termui.ColorMagenta
+		shorttermhist13.LineColor = termui.ColorGreen
 
 		// put them together
 		shorttermhistograms := termui.NewSparklines(shorttermhist0, shorttermhist1, shorttermhist2, 
 					shorttermhist3, shorttermhist4, shorttermhist5,
 					shorttermhist6, shorttermhist7, shorttermhist8,
 					shorttermhist9, shorttermhist10, shorttermhist11,
-					shorttermhist12, shorttermhist13, shorttermhist14)
+					shorttermhist12, shorttermhist13)
 		shorttermhistograms.Height = 30
 		shorttermhistograms.Width = 32
 		shorttermhistograms.Y = 4
@@ -396,12 +388,11 @@ func main() {
 				 MarketShareForCoin(coinMarketShares,coins[4]),MarketShareForCoin(coinMarketShares,coins[5]),
 					MarketShareForCoin(coinMarketShares,coins[6]), MarketShareForCoin(coinMarketShares,coins[7]), 						MarketShareForCoin(coinMarketShares,coins[8]),MarketShareForCoin(coinMarketShares,coins[9]),
 					 MarketShareForCoin(coinMarketShares,coins[10]), MarketShareForCoin(coinMarketShares,coins[11]),
-					MarketShareForCoin(coinMarketShares,coins[12]), MarketShareForCoin(coinMarketShares,coins[13]),
-					MarketShareForCoin(coinMarketShares,coins[14])}
+					MarketShareForCoin(coinMarketShares,coins[12]), MarketShareForCoin(coinMarketShares,coins[13])}
 		labels := []string{coins[0].Symbol(), coins[1].Symbol(), coins[2].Symbol(), coins[3].Symbol(),
 					coins[4].Symbol(), coins[5].Symbol(), coins[6].Symbol(), coins[7].Symbol(),
 					coins[8].Symbol(), coins[9].Symbol(), coins[10].Symbol(), coins[11].Symbol(),
-					coins[12].Symbol(), coins[13].Symbol(), coins[14].Symbol()}
+					coins[12].Symbol(), coins[13].Symbol()}
 		marketShares.BorderLabel = "Market Share"
 		marketShares.Data = data
 		marketShares.Width = 64
@@ -444,29 +435,14 @@ func main() {
 		}
 
 
+		debug := termui.NewPar(fmt.Sprintf(" day %d", dayCounter))
+		debug.Height = 1
+		debug.Width = 20
+		debug.X = 34
+		debug.Y = 30
+		debug.Border = false		
 	
-	//par1 := termui.NewPar(currentTime.Format("01-02-2006"))
-	//par1.Height = 1
-	//par1.Width = 20
-	//par1.X = 34
-	//par1.Y = 12
-	//par1.Border = false
-
-	//par3 := termui.NewPar(fmt.Sprintf("LGC launch day %d", coins[1].LaunchDay()))
-	//par3.Height = 1
-	//par3.Width = 20
-	///par3.X = 34
-	//par3.Y = 10
-	//par3.Border = false	
-
-	par2 := termui.NewPar(fmt.Sprintf(" day %d", dayCounter))
-	par2.Height = 1
-	par2.Width = 20
-	par2.X = 34
-	par2.Y = 30
-	par2.Border = false		
-	
-	termui.Render( shorttermhistograms, par2, exchangeGauge0, exchangeGauge1, exchangeGauge2, exchangeGauge3,
+	termui.Render( shorttermhistograms, debug, exchangeGauge0, exchangeGauge1, exchangeGauge2, exchangeGauge3,
 				exchangeGauge4, exchangeGauge5, exchangeGauge6, exchangeGauge7, marketCap, marketShares, 
 				recentNews, sentiment)
 	})
@@ -479,7 +455,7 @@ func GenerateTweets(coins []*coin.Coin) map[string]int {
 	coinDailyTweets := make(map[string]int)	
 	
 	for i, _ := range coins {
-		numberOfTweets := random(1,8,777)
+		numberOfTweets := random(1,8)
 		coinDailyTweets[coins[i].Name()] = numberOfTweets 
 	}
 	
@@ -487,13 +463,13 @@ func GenerateTweets(coins []*coin.Coin) map[string]int {
 }
 
 func GenerateNews(coins []*coin.Coin, dayCounter int) string {
-	chanceOfNews := random(1,10,143) // 1/3 chance of news for a random coin
-	randomIdx := (random(1,16,int64(chanceOfNews))-1)
+	chanceOfNews := random(1,10) // 1/3 chance of news for a random coin
+	randomIdx := (random(1,16)-1)
 	news := ""	
 	
 	if(chanceOfNews % 3 == 0) {
 		if(coins[randomIdx].LaunchDay() < dayCounter) {
-			eventStringRandomizer := random(1,7,89)
+			eventStringRandomizer := random(1,7)
 			if(eventStringRandomizer == 1) {
 				news = fmt.Sprintf("%s had a wallet release today", coins[randomIdx].Name())
 			} else if(eventStringRandomizer == 2) {
@@ -755,7 +731,6 @@ func FloatToInts(floatArray []float64) []int {
 	return intArray
 }
 
-func random(min, max int, seed int64) int {
-    rand.Seed(time.Now().Unix()/seed)
+func random(min, max int) int {
     return rand.Intn(max - min) + min
 }
