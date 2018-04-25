@@ -24,13 +24,17 @@ func (t Trader) SavingsBalance() float64 {
     return t.savingsBalance
 }
 
+func (t Trader) SavingsBalanceHistory() []float64 {
+    return t.savingsBalanceHistory
+}
+
 func (t Trader) SavingsBalanceOnDay(daysSinceStart int) float64 {
     return t.savingsBalanceHistory[daysSinceStart]
 }
 
 func (t *Trader) RecordBalances(dayCounter int) {
     // record savings balance
-    t.savingsBalanceHistory[dayCounter] = t.savingsBalance
+    t.savingsBalanceHistory = append(t.savingsBalanceHistory, t.SavingsBalance())
     
     // record coin balances
     for k, _ := range t.coinBalancesMap {
@@ -72,7 +76,7 @@ func (t *Trader) ModifyCoinAndSavingsBalance(coin string, coinAmount int, dollar
 	} else {
 	    t.coinBalancesMap[coin] = current + coinAmount
 	    t.savingsBalance = currentSavings - dollarAmount
-            ret := fmt.Sprintf("%.6f %s bought", coinAmount, coin)
+            ret := fmt.Sprintf("%d %s bought", coinAmount, coin)
 	    return ret
         }
   } else if (op == 2) {
@@ -82,7 +86,7 @@ func (t *Trader) ModifyCoinAndSavingsBalance(coin string, coinAmount int, dollar
 	} else {
 	     t.coinBalancesMap[coin] = current - coinAmount
              t.savingsBalance = t.savingsBalance + dollarAmount
-	     ret := fmt.Sprintf("%.6f %s sold", coinAmount, coin)
+	     ret := fmt.Sprintf("%d %s sold", coinAmount, coin)
 	     return ret
         }
     } else {

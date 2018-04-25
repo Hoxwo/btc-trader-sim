@@ -197,7 +197,7 @@ func main() {
 								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 2)
 		}
 		//save message
-		if(strings.Compare(news,"") != 0) {
+		if(strings.Compare(message,"") != 0) {
 			messageHistory = append(messageHistory, message)
 		}
 	})
@@ -271,7 +271,7 @@ func main() {
 			marketTrend = fourSidedDie
 		}
 		
-		totalMarketCap = AdvanceOneDay(coins, exchanges, coinPrices, exchangeValues, coinPriceHistory, exchangeValueHistory, 							    coinMarketShares, dayCounter, marketTrend, news, &newsHistory)
+		totalMarketCap = AdvanceOneDay(coins, exchanges, coinPrices, exchangeValues, coinPriceHistory, exchangeValueHistory, 							    coinMarketShares, dayCounter, marketTrend, news, &newsHistory, &t)
 		
 		//selected coin info	
 		selectedInfo := termui.NewPar("")
@@ -296,11 +296,35 @@ func main() {
 		traderInfo.Height = 18
 		traderInfo.Width = 27
 		traderInfo.X = 51
-		traderInfo.Y = 14
-		traderInfo.BorderLabel = "Balances"
+		traderInfo.Y = 10
+		traderInfo.BorderLabel = fmt.Sprintf("Balances -- %s", currentTime.Format("01-02-2006"))
 		traderInfo.BorderFg = termui.ColorCyan
-		traderInfo.TextFgColor = termui.ColorGreen			
+		traderInfo.TextFgColor = termui.ColorWhite			
 	
+		//savings history
+		savingsHistory := termui.NewLineChart()
+		savingsHistory.BorderLabel = "Savings History"
+		savingsHistory.Mode = "dot"
+		savingsHistory.Data = t.SavingsBalanceHistory()
+		savingsHistory.Width = 27	
+		savingsHistory.Height = 6
+		savingsHistory.X = 51
+		savingsHistory.Y = 28
+		savingsHistory.DotStyle = '.'
+		savingsHistory.AxesColor = termui.ColorCyan
+		savingsHistory.LineColor = termui.ColorBlue | termui.AttrBold
+
+		//Coin Worth $
+		coinWorth := termui.NewLineChart()
+		coinWorth.BorderLabel = "Crypto Net Worth $"
+		coinWorth.Data = GetTraderDollarValueForAllCoins(t, coinPriceHistory)
+		coinWorth.Width = 19
+		coinWorth.Height = 10
+		coinWorth.X = 32
+		coinWorth.Y = 24
+		coinWorth.AxesColor = termui.ColorWhite
+		coinWorth.LineColor = termui.ColorYellow
+
 		// Short term dollar amounts, or estimate of day until launch
 		shorttermhisttitle0 := ShortTermCoinTitle(coins[0], dayCounter, 0, selected)
 		shorttermhist0 := termui.NewSparkline()
@@ -539,33 +563,33 @@ func main() {
 		recentNews := termui.NewList()	
 		if(len(newsHistory) == 0) {		
 			recentNews.Items = make([]string,0)
-		} else if(len(newsHistory) < 10) {
+		} else if(len(newsHistory) < 6) {
 			recentNews.Items = newsHistory[:len(newsHistory)]
 		} else {
-			recentNews.Items = newsHistory[len(newsHistory)-10:len(newsHistory)]
+			recentNews.Items = newsHistory[len(newsHistory)-6:len(newsHistory)]
 		}
 		recentNews.ItemFgColor = termui.ColorWhite
 		recentNews.BorderLabel = fmt.Sprintf("Latest News")
-		recentNews.Height = 10
+		recentNews.Height = 6
 		recentNews.Width = 46
 		recentNews.Y = 4
 		recentNews.X = 32
 
 		//messages for player
 		messages := termui.NewList()	
-		if(len(newsHistory) == 0) {		
+		if(len(messageHistory) == 0) {		
 			recentNews.Items = make([]string,0)
-		} else if(len(newsHistory) < 4) {
+		} else if(len(messageHistory) < 3) {
 			recentNews.Items = messageHistory[:len(messageHistory)]
 		} else {
-			recentNews.Items = newsHistory[len(newsHistory)-4:len(messageHistory)]
+			recentNews.Items = messageHistory[len(messageHistory)-3:len(messageHistory)]
 		}
 		messages.ItemFgColor = termui.ColorCyan
 		messages.BorderLabel = fmt.Sprintf("Messages")
 		messages.Height = 4
-		messages.Width = 27
-		messages.Y = 32
-		messages.X = 51
+		messages.Width = 19
+		messages.Y = 10
+		messages.X = 32
 
 		//market sentiment
 		sentiment := termui.NewPar(SentimentString(marketTrend))
@@ -591,7 +615,7 @@ func main() {
 	
 	termui.Render( shorttermhistograms, debug, exchangeGauge0, exchangeGauge1, exchangeGauge2, exchangeGauge3,
 				exchangeGauge4, exchangeGauge5, exchangeGauge6, exchangeGauge7, marketCap, marketShares, 
-				recentNews, sentiment, selectedInfo, traderInfo, messages)
+				recentNews, sentiment, selectedInfo, traderInfo, messages, savingsHistory, coinWorth)
 	})
 
 	termui.Loop()
@@ -661,7 +685,7 @@ func GenerateNews(coins []*coin.Coin, dayCounter int) string {
 	return news
 }
 
-func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrices map[string]float64, exchangeValues map[string]int, 			coinPriceHistory map[string][]float64, exchangeValueHistory map[string][]int, coinMarketShares map[string]int, dayCounter int, 			marketTrend int, news string, newsHistory *[]string) int {
+func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrices map[string]float64, exchangeValues map[string]int, 			coinPriceHistory map[string][]float64, exchangeValueHistory map[string][]int, coinMarketShares map[string]int, dayCounter int, 			marketTrend int, news string, newsHistory *[]string, t *trader.Trader) int {
 	//compute totalMarketCap
 	totalCap := 0
 	for _, e := range exchanges {
@@ -732,6 +756,9 @@ func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrice
 	//shuffle shares		
 	coinMarketShares = ShuffleMarketShare(coinMarketShares, coins, news, GenerateTweets(coins), dayCounter)
 	
+	//record trader balances
+	t.RecordBalances(dayCounter)
+
 	return totalCap
 }
 
