@@ -63,26 +63,26 @@ func (t Trader) HistoricBalancesForCoin(coin string) []int {
 // coinAmount: amount to buy or sell
 // dollarAmount: cost in fiat
 // op: 1 - BUY, 2 - SELL
-func (t *Trader) ModifyCoinAndSavingsBalance(coin string, coinAmount int, dollarAmount float64, op int ) string {
+func (t *Trader) ModifyCoinAndSavingsBalance(coin string, coinAmount int, dollarAmount float64, op int) string {
   if(op == 1) {
 	current := t.coinBalancesMap[coin]
 	currentSavings := t.savingsBalance
 	if((currentSavings - dollarAmount) < 0.0 || currentSavings == 0.0) {
-            return "Can not buy that much - no cash"
+            return "Not enough money"
 	} else {
 	    t.coinBalancesMap[coin] = current + coinAmount
 	    t.savingsBalance = currentSavings - dollarAmount
-            ret := fmt.Sprintf("Buy of %.6f %s successful", coinAmount, coin)
+            ret := fmt.Sprintf("%.6f %s bought", coinAmount, coin)
 	    return ret
         }
   } else if (op == 2) {
 	current := t.coinBalancesMap[coin]
-	if((current - coinAmount) < 0.0 || current == 0.0) {
-            return "Can not sell that much"
+	if((current - coinAmount) < 0 || current == 0) {
+            return fmt.Sprintf("Not enough %s",coin)
 	} else {
 	     t.coinBalancesMap[coin] = current - coinAmount
              t.savingsBalance = t.savingsBalance + dollarAmount
-	     ret := fmt.Sprintf("Sell of %.6f %s successful", coinAmount, coin)
+	     ret := fmt.Sprintf("%.6f %s sold", coinAmount, coin)
 	     return ret
         }
     } else {

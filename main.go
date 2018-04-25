@@ -39,6 +39,8 @@ func main() {
 	news := ""
 	//news History
 	newsHistory := make([]string,0)
+	//message History
+	messageHistory := make([]string,0)
 	//index of Selected Coin
 	selected := 0
 	// current state
@@ -180,12 +182,24 @@ func main() {
 		termui.StopLoop()
 	})
 
+	//if in buying state, player gains 1 of selected coin
+	//	player loses savings equal to value of 1 coin
+	//if in selling state, player loses 1 of selected coin
+	//	player gains savings equal to value of 1 coin
 	termui.Handle("/sys/kbd/1", func(termui.Event) {
-		//if in buying state, player gains 1 of selected coin
-		//	player loses savings equal to value of 1 coin
-		//if in selling state, player loses 1 of selected coin
-		//	player gains savings equal to value of 1 coin
-		lastPlayerQuantityInput = 1
+		lastPlayerQuantityInput = 1		
+		message := ""
+		if(state == 2) {
+			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 1) 
+		} else if(state == 3) {
+			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 2)
+		}
+		//save message
+		if(strings.Compare(news,"") != 0) {
+			messageHistory = append(messageHistory, message)
+		}
 	})
 	
 	termui.Handle("/sys/kbd/2", func(termui.Event) {
@@ -230,6 +244,11 @@ func main() {
 		state = 3
 	})
 
+	termui.Handle("/sys/kbd/x", func(termui.Event) {
+		//player back to normal
+		state = 1
+	})
+
 	termui.Handle("/sys/kbd/k", func(termui.Event) {
 		if(selected > 0) {		
 			selected--
@@ -264,7 +283,7 @@ func main() {
 			selectedInfo = termui.NewPar(SelectedCoinTextState3(coins, selected))
 		}
 		selectedInfo.Height = 10
-		selectedInfo.Width = 20
+		selectedInfo.Width = 19
 		selectedInfo.X = 32
 		selectedInfo.Y = 14
 		selectedInfo.BorderLabel = ""
@@ -274,9 +293,9 @@ func main() {
 		//trader info
 		traderInfo := termui.NewPar("")		
 		traderInfo = termui.NewPar(TraderInfoText(t, coins))
-		traderInfo.Height = 16
-		traderInfo.Width = 26
-		traderInfo.X = 52
+		traderInfo.Height = 18
+		traderInfo.Width = 27
+		traderInfo.X = 51
 		traderInfo.Y = 14
 		traderInfo.BorderLabel = "Balances"
 		traderInfo.BorderFg = termui.ColorCyan
@@ -532,6 +551,22 @@ func main() {
 		recentNews.Y = 4
 		recentNews.X = 32
 
+		//messages for player
+		messages := termui.NewList()	
+		if(len(newsHistory) == 0) {		
+			recentNews.Items = make([]string,0)
+		} else if(len(newsHistory) < 4) {
+			recentNews.Items = messageHistory[:len(messageHistory)]
+		} else {
+			recentNews.Items = newsHistory[len(newsHistory)-4:len(messageHistory)]
+		}
+		messages.ItemFgColor = termui.ColorCyan
+		messages.BorderLabel = fmt.Sprintf("Messages")
+		messages.Height = 4
+		messages.Width = 27
+		messages.Y = 32
+		messages.X = 51
+
 		//market sentiment
 		sentiment := termui.NewPar(SentimentString(marketTrend))
 		sentiment.Height = 4
@@ -556,7 +591,7 @@ func main() {
 	
 	termui.Render( shorttermhistograms, debug, exchangeGauge0, exchangeGauge1, exchangeGauge2, exchangeGauge3,
 				exchangeGauge4, exchangeGauge5, exchangeGauge6, exchangeGauge7, marketCap, marketShares, 
-				recentNews, sentiment, selectedInfo, traderInfo)
+				recentNews, sentiment, selectedInfo, traderInfo, messages)
 	})
 
 	termui.Loop()
@@ -565,9 +600,10 @@ func main() {
 
 func TraderInfoText(t trader.Trader, coins []*coin.Coin) string {
 	traderInfo := ""
-	traderInfo = traderInfo + fmt.Sprintf("Savings Balance: %.2f\n", t.SavingsBalance())
+	traderInfo = traderInfo + fmt.Sprintf("Cash: $%.2f", t.SavingsBalance())
+	traderInfo = traderInfo + "\n---"
 	for _, c := range coins {
-		traderInfo = traderInfo + fmt.Sprintf("%s: %d\n",c.Name(),t.BalanceForCoin(c.Name()))
+		traderInfo = traderInfo + fmt.Sprintf("\n%s: %d",c.Name(),t.BalanceForCoin(c.Name()))
 	}
 	return traderInfo
 }
@@ -579,12 +615,12 @@ func SelectedCoinTextState1(coins []*coin.Coin, selected int) string {
 
 func SelectedCoinTextState2(coins []*coin.Coin, selected int) string {
 	//show name, quantity, enter quantity to buy, 1-9
-	return fmt.Sprintf("%s (%s)\n[1-9] amount to buy\nplayer quant",coins[selected].Name(), coins[selected].Symbol())
+	return fmt.Sprintf("%s (%s)\nBUY\nEnter [1-9]\n\n[x] to exit",coins[selected].Name(), coins[selected].Symbol())
 }
 
 func SelectedCoinTextState3(coins []*coin.Coin, selected int) string {
 	//show name, quantity, enter quantity to sell, 1-9
-	return fmt.Sprintf("%s (%s)\n[1-9] amount to sell\nplayer quant",coins[selected].Name(), coins[selected].Symbol())
+	return fmt.Sprintf("%s (%s)\nSELL\nEnter [1-9]\n\n[x] to exit",coins[selected].Name(), coins[selected].Symbol())
 }
 
 func GenerateTweets(coins []*coin.Coin) map[string]int {
