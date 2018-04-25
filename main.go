@@ -104,13 +104,13 @@ func main() {
 	coinMarketShares[c13.Name()] = 0
 	coinMarketShares[c14.Name()] = 0
 
-	//set up exchanges 
-	e0 := exchange.New("Mt Ganx",   10,  250, 0)
-	e1 := exchange.New("GDOX",      0,   500, 100)
-	e2 := exchange.New("BitSaurus", 0,  1000, 200)
-	e3 := exchange.New("CoinHQ",    0,  1500, 300)
-	e4 := exchange.New("Czinance",  0,  1000, 400)
-	e5 := exchange.New("Napoleox",  0,   750, 500)
+	//set up exchanges  
+	e0 := exchange.New("Mt Ganx",   10,   50,   0)
+	e1 := exchange.New("GDOX",      0,   300, 100)
+	e2 := exchange.New("BitSaurus", 0,   800, 200)
+	e3 := exchange.New("CoinHQ",    0,  1750, 300)
+	e4 := exchange.New("Czinance",  0,  1250, 400)
+	e5 := exchange.New("Napoleox",  0,   850, 500)
 	e6 := exchange.New("YoCoin",    0,   250, 600)
 	e7 := exchange.New("CoinHawk",  0,   250, 700)	
 
