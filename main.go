@@ -3,6 +3,7 @@ package main
 import "fmt"
 import "time"
 import "math/rand"
+import "strings"
 import percent "github.com/dariubs/percent"
 import coin "btc-trader-sim/coin"
 import trader "btc-trader-sim/trader"
@@ -33,25 +34,27 @@ func main() {
 	// coin market shares
 	coinMarketShares := make(map[string]int)
 	//news for the day
-	news := make([]string,0)
+	news := ""
+	//news History
+	newsHistory := make([]string,0)
 
 	// set up coins
 	// 	       {name,              symbol, price, supply,     launchDay}
 	c0 := coin.New("Bitcoin",           "BTC",  0.00,      20,         0)
-	c1 := coin.New("LightCoin",         "LGC",  0.00,      55,       0)
-	c2 := coin.New("Nethereum", 	    "NTH",  0.00,     100,       0)
-	c3 := coin.New("Nethereum Vintage", "NTV",  0.00,     100,       0)	
-	c4 := coin.New("Riddle",            "XRD",  0.00,   50000,       0)
-	c5 := coin.New("Ledge",            "XLG",  0.00,    14000,      0)				
-	c6 := coin.New("Bancem",            "BNC",  0.00,     850,      0)
-	c7 := coin.New("ZEO",               "ZEO",  0.00,      70,      0)
-	c8 := coin.New("YCash",             "YEC",  0.00,       4,       0)
-	c9 := coin.New("Interstellar",      "ILM",  0.00,   18000,      0)
-	c10 := coin.New("Bitbeets",          "BBT",  0.00,    2000,     0)
-	c11 := coin.New("TRAM",             "TRM",  0.00,   70000,      0)
-	c12 := coin.New("DigiLink",         "DGL", 0.00,     350,      0)
-	c13 := coin.New("XTRAbits",         "XBI",  0.00,     650,      0)
-	c14 := coin.New("Silliqa",          "SIL",  0.00,    7000,      0)
+	c1 := coin.New("LightCoin",         "LGC",  0.00,      55,       100)
+	c2 := coin.New("Nethereum", 	    "NTH",  0.00,     100,       200)
+	c3 := coin.New("Nethereum Vintage", "NTV",  0.00,     100,       300)	
+	c4 := coin.New("Riddle",            "XRD",  0.00,   50000,       400)
+	c5 := coin.New("Ledge",            "XLG",  0.00,    14000,       500)				
+	c6 := coin.New("Bancem",            "BNC",  0.00,     850,       600)
+	c7 := coin.New("ZEO",               "ZEO",  0.00,      70,       700)
+	c8 := coin.New("YCash",             "YEC",  0.00,       4,       800)
+	c9 := coin.New("Interstellar",      "ILM",  0.00,   18000,       900)
+	c10 := coin.New("Bitbeets",          "BBT",  0.00,    2000,     1000)
+	c11 := coin.New("TRAM",             "TRM",  0.00,   70000,      1100)
+	c12 := coin.New("DigiLink",         "DGL", 0.00,     350,       1200)
+	c13 := coin.New("XTRAbits",         "XBI",  0.00,     650,      1300)
+	c14 := coin.New("Silliqa",          "SIL",  0.00,    7000,      1400)
 	
 	//add em to our master list
 	coins = append(coins, &c0, &c1, &c2, &c3, &c4, &c5, &c6, &c7, &c8, &c9, &c10, &c11, &c12, &c13, &c14)
@@ -90,21 +93,21 @@ func main() {
 	coinPriceHistory[c14.Name()] = append(arr1, c14.Price())
 
 	// initialize shares of the market - only BTC at first	
-	coinMarketShares[c0.Name()] = 20
-	coinMarketShares[c1.Name()] = 10
-	coinMarketShares[c2.Name()] = 5
-	coinMarketShares[c3.Name()] = 5
-	coinMarketShares[c4.Name()] = 5
-	coinMarketShares[c5.Name()] = 5
-	coinMarketShares[c6.Name()] = 5	
-	coinMarketShares[c7.Name()] = 5
-	coinMarketShares[c8.Name()] = 5
-	coinMarketShares[c9.Name()] = 5
-	coinMarketShares[c10.Name()] = 5
-	coinMarketShares[c11.Name()] = 5
-	coinMarketShares[c12.Name()] = 5
-	coinMarketShares[c13.Name()] = 5
-	coinMarketShares[c14.Name()] = 10
+	coinMarketShares[c0.Name()] = 100
+	coinMarketShares[c1.Name()] = 0
+	coinMarketShares[c2.Name()] = 0
+	coinMarketShares[c3.Name()] = 0
+	coinMarketShares[c4.Name()] = 0
+	coinMarketShares[c5.Name()] = 0
+	coinMarketShares[c6.Name()] = 0	
+	coinMarketShares[c7.Name()] = 0
+	coinMarketShares[c8.Name()] = 0
+	coinMarketShares[c9.Name()] = 0
+	coinMarketShares[c10.Name()] = 0
+	coinMarketShares[c11.Name()] = 0
+	coinMarketShares[c12.Name()] = 0
+	coinMarketShares[c13.Name()] = 0
+	coinMarketShares[c14.Name()] = 0
 
 	//set up exchanges  
 	e0 := exchange.New("Mt Ganx",   10,   50,   0)
@@ -162,9 +165,12 @@ func main() {
 		dayCounter++
 		marketTrend = 1
 		fourSidedDie := random(1,5)
-		marketTrend = fourSidedDie
+		downturnChance := random(1,3)
+		if (downturnChance == 2) {
+			marketTrend = fourSidedDie
+		}
 		
-		totalMarketCap = AdvanceOneDay(coins, exchanges, coinPrices, exchangeValues, coinPriceHistory, exchangeValueHistory, 							    coinMarketShares, dayCounter, marketTrend, news)
+		totalMarketCap = AdvanceOneDay(coins, exchanges, coinPrices, exchangeValues, coinPriceHistory, exchangeValueHistory, 							    coinMarketShares, dayCounter, marketTrend, news, newsHistory)
 	
 		// Short term dollar amounts, or estimate of day until launch
 		shorttermhisttitle0 := ShortTermCoinTitle(coins[0], dayCounter)
@@ -376,11 +382,11 @@ func main() {
 			marketCapWindow = GetHistoricTotalMarketCapAsFloatArray(exchangeValueHistory)[dayCounter-31:dayCounter-1]			
 		}
 		marketCap.Data = marketCapWindow	
-		marketCap.Width = 42
+		marketCap.Width = 28
 		marketCap.Height = 10
-		marketCap.X = 64
+		marketCap.X = 78
 		marketCap.Y = 0
-		marketCap.DotStyle = '+'
+		marketCap.DotStyle = '.'
 		marketCap.AxesColor = termui.ColorWhite
 		marketCap.LineColor = termui.ColorGreen | termui.AttrBold
 
@@ -396,7 +402,7 @@ func main() {
 					coins[4].Symbol(), coins[5].Symbol(), coins[6].Symbol(), coins[7].Symbol(),
 					coins[8].Symbol(), coins[9].Symbol(), coins[10].Symbol(), coins[11].Symbol(),
 					coins[12].Symbol(), coins[13].Symbol(), coins[14].Symbol()}
-		marketShares.BorderLabel = "Market Share by Coin"
+		marketShares.BorderLabel = "Market Share"
 		marketShares.Data = data
 		marketShares.Width = 64
 		marketShares.Height = 4
@@ -406,30 +412,63 @@ func main() {
 		marketShares.TextColor = termui.ColorWhite
 		marketShares.BarColor = termui.ColorBlue
 		marketShares.NumColor = termui.ColorWhite
-	
-	par1 := termui.NewPar(currentTime.Format("01-02-2006"))
-	par1.Height = 1
-	par1.Width = 20
-	par1.X = 34
-	par1.Y = 12
-	par1.Border = false
+		
+		//news
+		recentNews := termui.NewList()	
+		if(len(newsHistory) == 0) {		
+			recentNews.Items = make([]string,0)
+		} else if(len(newsHistory) < 10) {
+			recentNews.Items = newsHistory[:len(newsHistory)-1]
+		} else {
+			recentNews.Items = newsHistory[len(newsHistory)-10:len(newsHistory)-1]
+		}
+		recentNews.ItemFgColor = termui.ColorWhite
+		recentNews.BorderLabel = fmt.Sprintf("%d", len(newsHistory))
+		recentNews.Height = 10
+		recentNews.Width = 46
+		recentNews.Y = 4
+		recentNews.X = 32
 
-	par3 := termui.NewPar(fmt.Sprintf("LGC launch day %d", coins[1].LaunchDay()))
-	par3.Height = 1
-	par3.Width = 20
-	par3.X = 34
-	par3.Y = 10
-	par3.Border = false	
+		//market sentiment
+		sentiment := termui.NewPar(SentimentString(marketTrend))
+		sentiment.Height = 4
+		sentiment.Width = 14
+		sentiment.X = 64
+		sentiment.Y = 0
+		sentiment.BorderLabel = "Sentiment"
+		sentiment.BorderFg = termui.ColorCyan
+		if(marketTrend == 1 || marketTrend == 2) {
+			sentiment.TextFgColor = termui.ColorGreen
+		} else {
+			sentiment.TextFgColor = termui.ColorRed
+		}
+
+
+	
+	//par1 := termui.NewPar(currentTime.Format("01-02-2006"))
+	//par1.Height = 1
+	//par1.Width = 20
+	//par1.X = 34
+	//par1.Y = 12
+	//par1.Border = false
+
+	//par3 := termui.NewPar(fmt.Sprintf("LGC launch day %d", coins[1].LaunchDay()))
+	//par3.Height = 1
+	//par3.Width = 20
+	///par3.X = 34
+	//par3.Y = 10
+	//par3.Border = false	
 
 	par2 := termui.NewPar(fmt.Sprintf(" day %d", dayCounter))
 	par2.Height = 1
 	par2.Width = 20
 	par2.X = 34
-	par2.Y = 14
+	par2.Y = 30
 	par2.Border = false		
 	
-	termui.Render( shorttermhistograms, par1, par2, par3, exchangeGauge0, exchangeGauge1, exchangeGauge2, exchangeGauge3,
-				exchangeGauge4, exchangeGauge5, exchangeGauge6, exchangeGauge7, marketCap, marketShares)
+	termui.Render( shorttermhistograms, par2, exchangeGauge0, exchangeGauge1, exchangeGauge2, exchangeGauge3,
+				exchangeGauge4, exchangeGauge5, exchangeGauge6, exchangeGauge7, marketCap, marketShares, 
+				recentNews, sentiment)
 	})
 
 	termui.Loop()
@@ -440,32 +479,41 @@ func GenerateTweets(coins []*coin.Coin) map[string]int {
 	coinDailyTweets := make(map[string]int)	
 	
 	for i, _ := range coins {
-		numberOfTweets := (random 1,8)
+		numberOfTweets := random(1,8)
 		coinDailyTweets[coins[i].Name()] = numberOfTweets 
 	}
 	
 	return coinDailyTweets
 }
 
-func GenerateNews(coins []*coin.Coin) []string {
-	numberOfNews := (random 1,4) // up to 3 pieces of news will be distributed to a random coin
+func GenerateNews(coins []*coin.Coin, dayCounter int) string {
+	chanceOfNews := random(1,4) // 1/3 chance of news for a random coin
 	randomIdx := (random(1,16)-1)
-	news := make([]string,0)	
+	news := ""	
 	
-	for i := 0 ; i < numberOfNews ; i++ {
-		eventStringRandomizer := random(1,4)
-		if(eventStringRandomizer == 1) {
-			append(news, fmt.Sprintf("%s had a wallet release today.", coins[randomIdx].Name())
-		} else if(eventStringRandomizer == 2) {
-			append(news, fmt.Sprintf("%s team will be speaking at a conference this week.", coins[randomIdx].Name())
-		} else if(eventStringRandomizer == 3) {
-			append(news, fmt.Sprintf("%s announced a new partnership.", coins[randomIdx].Name())
+	if(chanceOfNews == 2) {
+		if(coins[randomIdx].LaunchDay() < dayCounter) {
+			eventStringRandomizer := random(1,7)
+			if(eventStringRandomizer == 1) {
+				news = fmt.Sprintf("%s had a wallet release today", coins[randomIdx].Name())
+			} else if(eventStringRandomizer == 2) {
+				news = fmt.Sprintf("%s team spoke at a conference this week", coins[randomIdx].Name())
+			} else if(eventStringRandomizer == 3) {
+				news = fmt.Sprintf("%s announced a new partnership", coins[randomIdx].Name())
+			} else if(eventStringRandomizer == 4) {
+				news = fmt.Sprintf("%s released a developer update", coins[randomIdx].Name())
+			} else if(eventStringRandomizer == 5) {
+				news = fmt.Sprintf("%s founder appeared on CABC", coins[randomIdx].Name())
+			} else if(eventStringRandomizer == 6) {
+				news = fmt.Sprintf("%s was tweeted by an e-celeb", coins[randomIdx].Name())
+			}
 		}
 	}
+
 	return news
 }
 
-func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrices map[string]float64, exchangeValues map[string]int, 			coinPriceHistory map[string][]float64, exchangeValueHistory map[string][]int, coinMarketShares map[string]int, dayCounter int, 			marketTrend int, news []string) int {
+func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrices map[string]float64, exchangeValues map[string]int, 			coinPriceHistory map[string][]float64, exchangeValueHistory map[string][]int, coinMarketShares map[string]int, dayCounter int, 			marketTrend int, news string, newsHistory []string) int {
 	//compute totalMarketCap
 	totalCap := 0
 	for _, e := range exchanges {
@@ -504,6 +552,7 @@ func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrice
 			delete(coinMarketShares, c.Name())
 			coinMarketShares[c.Name()] = icoShare
 			
+			//adjust price and records
 			var capShare float64 =  float64(float64(totalCap)*float64(1000)) /* how many millions */ / 
 					float64(MarketShareForCoin(coinMarketShares, c)/100)
 			price := capShare / float64(c.Supply())
@@ -515,10 +564,7 @@ func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrice
 		     //grab icoShare from a non-zero coin
 		}
 	    } else {
-		news = GenerateNews(coins)
-		coinDailyTweets := GenerateTweets(coins)
-		coinMarketShares = ShuffleMarketShare(coinMarketShares, coins, news, coinDailyTweets)	
-		
+		//adjust price and records
 		var capShare float64 =  float64(float64(totalCap)*float64(1000)) /* how many millions */ * 
 					float64(float64(MarketShareForCoin(coinMarketShares, c))/float64(100))
 		price := capShare / float64(c.Supply())
@@ -526,28 +572,51 @@ func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrice
 	    	delete(coinPriceHistory, c.Name())
 	    	coinPriceHistory[c.Name()] = append(currentPriceHistory, coinPrices[c.Name()])
 	    	coinPrices[c.Name()] = c.DailyPriceAdjustment(price)
-	        }
-	    }		
+	    }
+	}	
+
+	//make and save today's news
+	news = GenerateNews(coins, dayCounter)
+	//if(strings.Compare(news,"") != 0) {
+		newsHistory = append(newsHistory, news)
+	//}
+
+	//shuffle shares		
+	coinMarketShares = ShuffleMarketShare(coinMarketShares, coins, news, GenerateTweets(coins), dayCounter)
+	
 	return totalCap
 }
 
-func ShuffleMarketShare(coinMarketShares map[string]int, coins []*coin.Coin, news []string, coinDailyTweets map[string]int) map[string]int {
-	//handle tweets
+func ShuffleMarketShare(coinMarketShares map[string]int, coins []*coin.Coin, news string, coinDailyTweets map[string]int, dayCounter int) map[string]int {
+	//take 1 from every coin's share, leaves us with n share to distribute, n is number of coins that are past their launch day	
+	// also find which coin got news
+	sharesToGive := 0	
+	newsworthy := ""
+	
 	for _, c := range coins {
-		coinMarketShares
+		if(strings.Contains(news, c.Name())) {
+			newsworthy = c.Name()			
+		}
+	}
+
+	// if a coin got news take a share from every coin with shares over 10 and give it to the coin with news
+	if(strings.Compare(newsworthy,"") != 0) {
+		for _, c := range coins {
+			if(c.LaunchDay() < dayCounter) {	
+				if(coinMarketShares[c.Name()] > 10) {		
+					previousShares := coinMarketShares[c.Name()]
+					delete(coinMarketShares, c.Name())
+					coinMarketShares[c.Name()] = previousShares - 1		
+					sharesToGive = sharesToGive + 1
+				}
+			}
+		}
 	}
 	
-	delete(coinMarketShares, coins[coinsPicked[0]].Name())		
-	coinMarketShares[coins[coinsPicked[0]].Name()] = coinMarketShares[coins[coinsPicked[0]].Name()] + 2
-	delete(coinMarketShares, coins[coinsPicked[1]].Name())	
-	coinMarketShares[coins[coinsPicked[1]].Name()] = coinMarketShares[coins[coinsPicked[1]].Name()] + 1
-	delete(coinMarketShares, coins[coinsPicked[2]].Name())	
-	coinMarketShares[coins[coinsPicked[2]].Name()] = coinMarketShares[coins[coinsPicked[2]].Name()] - 1
-	delete(coinMarketShares, coins[coinsPicked[3]].Name())	
-	coinMarketShares[coins[coinsPicked[3]].Name()] = coinMarketShares[coins[coinsPicked[3]].Name()] - 2
-
-	//handle coin with news items
-	delete(coinMarketShares, coins[coinsPicked[0]].Name())	
+	//for now, give it to the coin who got news
+	prevShares := coinMarketShares[newsworthy]
+	delete(coinMarketShares, newsworthy)		
+	coinMarketShares[newsworthy] = prevShares + sharesToGive
 
 	return coinMarketShares
 }
@@ -562,6 +631,18 @@ func MarketCapInfoString(totalMarketCap int) string {
 
 func MarketShareForCoin(coinMarketShares map[string]int, coin *coin.Coin) int {
 	return coinMarketShares[coin.Name()]
+}
+
+func SentimentString(marketTrend int) string {
+	if(marketTrend == 1) { 
+		return "BULLISH+"
+	} else if(marketTrend == 2) {
+		return "BULLISH"
+	} else if(marketTrend == 3) {
+		return "BULLISH"
+	} else {
+		return "BEARISH-"
+	}
 }
 
 func ExchangeInfoString(exchange *exchange.Exchange, dayCounter int) string {
