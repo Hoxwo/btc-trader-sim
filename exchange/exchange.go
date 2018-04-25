@@ -2,6 +2,7 @@ package exchange
 
 import "time"
 import "math/rand"
+import percent "github.com/dariubs/percent"
 
 type Exchange struct {
     name string
@@ -54,30 +55,31 @@ func random(min, max int) int {
 
 func (e *Exchange) DailyValueAdjustment(totalMarketCap int, marketTrend int) int {
 	if (marketTrend == 1) {
-	    dailyIncrease := 10
-	    if (dailyIncrease + e.ValueAdded() < e.MaxValueAdded()) {
-	    	e.SetValueAdded(e.ValueAdded() + dailyIncrease)
+	    dailyGains := random(5, 12)
+	    if ((e.ValueAdded() + 1) + int(percent.Percent(dailyGains, int(e.ValueAdded()))) < e.MaxValueAdded()) {
+	    	e.SetValueAdded(e.ValueAdded() + int(percent.Percent(dailyGains, int(e.ValueAdded()+20))))
 	    }
 	} else if (marketTrend == 2) {
-	    dailyIncrease := 10
-	    if (dailyIncrease + e.ValueAdded() < e.MaxValueAdded()) {
-	    	e.SetValueAdded(e.ValueAdded() + dailyIncrease)
+	    dailyGains := random(1, 5)
+	    if ((e.ValueAdded() + 1) + int(percent.Percent(dailyGains, int(e.ValueAdded()))) < e.MaxValueAdded()) {
+	     	e.SetValueAdded(e.ValueAdded() + int(percent.Percent(dailyGains, int(e.ValueAdded()+20))))
 	    }
 	} else if (marketTrend == 3) {
-	    dailyDecrease := 1
-	    if (dailyDecrease > e.ValueAdded()) {
+	    dailyGains := random(1, 5)
+	    if (dailyGains > e.ValueAdded()) {
 		e.SetValueAdded(0)
 	    } else {
-		e.SetValueAdded(e.ValueAdded() - dailyDecrease)
+		e.SetValueAdded(e.ValueAdded() - int(percent.Percent(dailyGains, int(e.ValueAdded()+20))))
 	    }
 	} else {	
-	    dailyDecrease := 1
-	    if (dailyDecrease > e.ValueAdded()) {
+	    dailyGains := random(5, 12)
+	    if (dailyGains > e.ValueAdded()) {
 		e.SetValueAdded(0)
 	    } else {
-		e.SetValueAdded(e.ValueAdded() - dailyDecrease)
+		e.SetValueAdded(e.ValueAdded() - int(percent.Percent(dailyGains, int(e.ValueAdded()+20))))
 	    }
 	}
+
 	return e.ValueAdded()
 }
 
