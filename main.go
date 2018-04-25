@@ -204,34 +204,130 @@ func main() {
 	
 	termui.Handle("/sys/kbd/2", func(termui.Event) {
 		lastPlayerQuantityInput = 2
+		message := ""
+		if(state == 2) {
+			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 1) 
+		} else if(state == 3) {
+			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 2)
+		}
+		//save message
+		if(strings.Compare(message,"") != 0) {
+			messageHistory = append(messageHistory, message)
+		}
 	})
 	
 	termui.Handle("/sys/kbd/3", func(termui.Event) {
 		lastPlayerQuantityInput = 3
+		message := ""
+		if(state == 2) {
+			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 1) 
+		} else if(state == 3) {
+			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 2)
+		}
+		//save message
+		if(strings.Compare(message,"") != 0) {
+			messageHistory = append(messageHistory, message)
+		}
 	})
 	
 	termui.Handle("/sys/kbd/4", func(termui.Event) {
 		lastPlayerQuantityInput = 4
+		message := ""
+		if(state == 2) {
+			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 1) 
+		} else if(state == 3) {
+			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 2)
+		}
+		//save message
+		if(strings.Compare(message,"") != 0) {
+			messageHistory = append(messageHistory, message)
+		}
 	})
 	
 	termui.Handle("/sys/kbd/5", func(termui.Event) {
 		lastPlayerQuantityInput = 5
+		message := ""
+		if(state == 2) {
+			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 1) 
+		} else if(state == 3) {
+			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 2)
+		}
+		//save message
+		if(strings.Compare(message,"") != 0) {
+			messageHistory = append(messageHistory, message)
+		}
 	})
 	
 	termui.Handle("/sys/kbd/6", func(termui.Event) {
 		lastPlayerQuantityInput = 6
+		message := ""
+		if(state == 2) {
+			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 1) 
+		} else if(state == 3) {
+			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 2)
+		}
+		//save message
+		if(strings.Compare(message,"") != 0) {
+			messageHistory = append(messageHistory, message)
+		}
 	})
 	
 	termui.Handle("/sys/kbd/7", func(termui.Event) {
 		lastPlayerQuantityInput = 7
+		message := ""
+		if(state == 2) {
+			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 1) 
+		} else if(state == 3) {
+			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 2)
+		}
+		//save message
+		if(strings.Compare(message,"") != 0) {
+			messageHistory = append(messageHistory, message)
+		}
 	})
 	
 	termui.Handle("/sys/kbd/8", func(termui.Event) {
 		lastPlayerQuantityInput = 8
+		message := ""
+		if(state == 2) {
+			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 1) 
+		} else if(state == 3) {
+			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 2)
+		}
+		//save message
+		if(strings.Compare(message,"") != 0) {
+			messageHistory = append(messageHistory, message)
+		}
 	})
 
 	termui.Handle("/sys/kbd/9", func(termui.Event) {
 		lastPlayerQuantityInput = 9
+		message := ""
+		if(state == 2) {
+			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 1) 
+		} else if(state == 3) {
+			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 2)
+		}
+		//save message
+		if(strings.Compare(message,"") != 0) {
+			messageHistory = append(messageHistory, message)
+		}
 	})		
 
 	termui.Handle("/sys/kbd/b", func(termui.Event) {
@@ -317,7 +413,7 @@ func main() {
 		//Coin Worth $
 		coinWorth := termui.NewLineChart()
 		coinWorth.BorderLabel = "Crypto Net Worth $"
-		coinWorth.Data = GetTraderDollarValueForAllCoins(t, coinPriceHistory)
+		coinWorth.Data = GetTraderDollarValueForAllCoins(t, coinPriceHistory, dayCounter)
 		coinWorth.Width = 19
 		coinWorth.Height = 10
 		coinWorth.X = 32
@@ -580,9 +676,9 @@ func main() {
 		if(len(messageHistory) == 0) {		
 			recentNews.Items = make([]string,0)
 		} else if(len(messageHistory) < 3) {
-			recentNews.Items = messageHistory[:len(messageHistory)]
+			messages.Items = messageHistory[:len(messageHistory)]
 		} else {
-			recentNews.Items = messageHistory[len(messageHistory)-3:len(messageHistory)]
+			messages.Items = messageHistory[len(messageHistory)-3:len(messageHistory)]
 		}
 		messages.ItemFgColor = termui.ColorCyan
 		messages.BorderLabel = fmt.Sprintf("Messages")
@@ -714,6 +810,9 @@ func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrice
 		if(c.LaunchDay() >= dayCounter+10) {
 	    		c.DailyLaunchAdjustment(marketTrend)
 		}
+		currentPriceHistory := coinPriceHistory[c.Name()]
+	    	delete(coinPriceHistory, c.Name())
+	    	coinPriceHistory[c.Name()] = append(currentPriceHistory, coinPrices[c.Name()])
 	    } else if(c.LaunchDay() == dayCounter) {	
 		icoShare := 2
 		if(coinMarketShares["Bitcoin"] > 10) {
@@ -814,7 +913,7 @@ func SentimentString(marketTrend int) string {
 	} else if(marketTrend == 2) {
 		return "BULLISH"
 	} else if(marketTrend == 3) {
-		return "BULLISH"
+		return "BEARISH"
 	} else {
 		return "BEARISH-"
 	}
@@ -904,22 +1003,21 @@ func GetHistoricPriceDataForCoin(coin string, coinPriceHistory map[string][]floa
 	return coinPriceHistory[coin]
 }
 
-func GetTraderDollarValueForCoin(t trader.Trader, coin string, coinPriceHistory map[string][]float64) []float64 {
+func GetTraderDollarValueForCoin(t trader.Trader, coin string, coinPriceHistory map[string][]float64, dayCounter int) []float64 {
 	traderBalance := t.HistoricBalancesForCoin(coin)
-	traderDollarValue := make([]float64, len(traderBalance))
-	for i, _ := range traderBalance {
-		traderDollarValue[i] = (float64(traderBalance[i])*coinPriceHistory[coin][i])
+	traderDollarValue := make([]float64,dayCounter)
+	for i := 0; i < dayCounter-1; i++ {
+		traderDollarValue[i] = (float64(traderBalance[i]))*(coinPriceHistory[coin][i])
 	}
 
 	return traderDollarValue
 }
 
-func GetTraderDollarValueForAllCoins(t trader.Trader, coinPriceHistory map[string][]float64) []float64 {
-	ownedCoins := t.OwnedCoins()
-	sumAllCoins := make([]float64, len(GetTraderDollarValueForCoin(t, "bitcoin", coinPriceHistory)))
-	for _, c := range ownedCoins {
-		oneCoinHistory := GetTraderDollarValueForCoin(t, c, coinPriceHistory)
-		for i, _ := range oneCoinHistory {
+func GetTraderDollarValueForAllCoins(t trader.Trader, coinPriceHistory map[string][]float64, dayCounter int) []float64 {
+	sumAllCoins := make([]float64,dayCounter)
+	for k, _ := range coinPriceHistory {
+		oneCoinHistory := GetTraderDollarValueForCoin(t, k, coinPriceHistory, dayCounter)
+		for i := 0; i < dayCounter-1; i++ {
 			sumAllCoins[i] = sumAllCoins[i] + oneCoinHistory[i]
 		}
 	}
