@@ -164,13 +164,13 @@ func main() {
 		currentTime = currentTime.Add(time.Hour * 24 * 1)
 		dayCounter++
 		marketTrend = 1
-		fourSidedDie := random(1,5)
-		downturnChance := random(1,3)
+		fourSidedDie := random(1,5,7427)
+		downturnChance := random(1,3,198)
 		if (downturnChance == 2) {
 			marketTrend = fourSidedDie
 		}
 		
-		totalMarketCap = AdvanceOneDay(coins, exchanges, coinPrices, exchangeValues, coinPriceHistory, exchangeValueHistory, 							    coinMarketShares, dayCounter, marketTrend, news, newsHistory)
+		totalMarketCap = AdvanceOneDay(coins, exchanges, coinPrices, exchangeValues, coinPriceHistory, exchangeValueHistory, 							    coinMarketShares, dayCounter, marketTrend, news, &newsHistory)
 	
 		// Short term dollar amounts, or estimate of day until launch
 		shorttermhisttitle0 := ShortTermCoinTitle(coins[0], dayCounter)
@@ -423,7 +423,7 @@ func main() {
 			recentNews.Items = newsHistory[len(newsHistory)-10:len(newsHistory)-1]
 		}
 		recentNews.ItemFgColor = termui.ColorWhite
-		recentNews.BorderLabel = fmt.Sprintf("%d", len(newsHistory))
+		recentNews.BorderLabel = fmt.Sprintf("Latest News")
 		recentNews.Height = 10
 		recentNews.Width = 46
 		recentNews.Y = 4
@@ -479,7 +479,7 @@ func GenerateTweets(coins []*coin.Coin) map[string]int {
 	coinDailyTweets := make(map[string]int)	
 	
 	for i, _ := range coins {
-		numberOfTweets := random(1,8)
+		numberOfTweets := random(1,8,777)
 		coinDailyTweets[coins[i].Name()] = numberOfTweets 
 	}
 	
@@ -487,13 +487,13 @@ func GenerateTweets(coins []*coin.Coin) map[string]int {
 }
 
 func GenerateNews(coins []*coin.Coin, dayCounter int) string {
-	chanceOfNews := random(1,4) // 1/3 chance of news for a random coin
-	randomIdx := (random(1,16)-1)
+	chanceOfNews := random(1,10,143) // 1/3 chance of news for a random coin
+	randomIdx := (random(1,16,int64(chanceOfNews))-1)
 	news := ""	
 	
-	if(chanceOfNews == 2) {
+	if(chanceOfNews % 3 == 0) {
 		if(coins[randomIdx].LaunchDay() < dayCounter) {
-			eventStringRandomizer := random(1,7)
+			eventStringRandomizer := random(1,7,89)
 			if(eventStringRandomizer == 1) {
 				news = fmt.Sprintf("%s had a wallet release today", coins[randomIdx].Name())
 			} else if(eventStringRandomizer == 2) {
@@ -513,7 +513,7 @@ func GenerateNews(coins []*coin.Coin, dayCounter int) string {
 	return news
 }
 
-func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrices map[string]float64, exchangeValues map[string]int, 			coinPriceHistory map[string][]float64, exchangeValueHistory map[string][]int, coinMarketShares map[string]int, dayCounter int, 			marketTrend int, news string, newsHistory []string) int {
+func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrices map[string]float64, exchangeValues map[string]int, 			coinPriceHistory map[string][]float64, exchangeValueHistory map[string][]int, coinMarketShares map[string]int, dayCounter int, 			marketTrend int, news string, newsHistory *[]string) int {
 	//compute totalMarketCap
 	totalCap := 0
 	for _, e := range exchanges {
@@ -577,9 +577,9 @@ func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrice
 
 	//make and save today's news
 	news = GenerateNews(coins, dayCounter)
-	//if(strings.Compare(news,"") != 0) {
-		newsHistory = append(newsHistory, news)
-	//}
+	if(strings.Compare(news,"") != 0) {
+		*newsHistory = append(*newsHistory, news)
+	}
 
 	//shuffle shares		
 	coinMarketShares = ShuffleMarketShare(coinMarketShares, coins, news, GenerateTweets(coins), dayCounter)
@@ -755,7 +755,7 @@ func FloatToInts(floatArray []float64) []int {
 	return intArray
 }
 
-func random(min, max int) int {
-    rand.Seed(time.Now().Unix())
+func random(min, max int, seed int64) int {
+    rand.Seed(time.Now().Unix()/seed)
     return rand.Intn(max - min) + min
 }
