@@ -35,11 +35,11 @@ func main() {
 
 	// set up coins
 	// 	       {name,              symbol, price, supply,     launchDay}
-	c0 := coin.New("Bitcoin",           "BTC",  0.00,      20,        1)
+	c0 := coin.New("Bitcoin",           "BTC",  0.00,      20,        0)
 	c1 := coin.New("LightCoin",         "LGC",  0.00,      55,      100)
 	c2 := coin.New("Nethereum", 	    "NTH",  0.00,     100,      200)
-	c3 := coin.New("Nethereum Vintage", "NTV",  0.00,     100,      855)	
-	c4 := coin.New("Riddle",            "XRD",  0.00,   50000,     1220)
+	c3 := coin.New("Nethereum Vintage", "NTV",  0.00,     100,      300)	
+	c4 := coin.New("Riddle",            "XRD",  0.00,   50000,      400)
 	c5 := coin.New("ZEO",               "ZEO",  0.00,      70,     1585)
 	c6 := coin.New("YCash",             "YEC",  0.00,       4,     1850)
 	c7 := coin.New("Interstellar",      "ILM",  0.00,   18000,     2215)
@@ -93,7 +93,7 @@ func main() {
 	coinMarketShares[c11.Name()] = 0
 
 	//set up exchanges 
-	e0 := exchange.New("Mt Ganx",   10,  250, 1)
+	e0 := exchange.New("Mt Ganx",   10,  250, 0)
 	e1 := exchange.New("GDOX",      0,  500, 100)
 	e2 := exchange.New("BitSaurus", 0, 1000, 2000)
 	e3 := exchange.New("CoinHQ",    0, 1500, 3000)
@@ -421,15 +421,36 @@ func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrice
 	    if(c.LaunchDay() > dayCounter) {
 	    	c.DailyLaunchAdjustment(marketTrend)
 	    } else {
+		if(c.LaunchDay() == dayCounter) {
+			icoShare := 2
+			if(coinMarketShares["Bitcoin"] > 90) {
+			    //take icoShare from BTC
+		    	    coinMarketShares["Bitcoin"] = coinMarketShares["Bitcoin"] - icoShare
+		    	    coinMarketShares[c.Name()] = icoShare
+			} else {
+		   	    //grab icoShare from a non-zero coin
+		    	    randomIdx := random(1, 12)
+		    	    for {
+				if(randomIdx > 11 ) {
+			    		randomIdx = 2
+				} else if(coinMarketShares[coins[randomIdx-1].Name()] > icoShare) {
+                            		coinMarketShares[coins[randomIdx-1].Name()] = coinMarketShares[coins[randomIdx-1].Name()] - icoShare
+		    	    		coinMarketShares[c.Name()] = icoShare
+					break;
+				} else {
+			    		randomIdx = randomIdx + 3
+				}
+		    	    }
+			}
+		}
 		var capShare float64 = (float64(totalCap)*float64(1000)) /* how many millions */ / float64(MarketShareForCoin(coinMarketShares, c))
 		price := capShare / float64(c.Supply())
 	    	currentPriceHistory := coinPriceHistory[c.Name()]
 	    	delete(coinPriceHistory, c.Name())
 	    	coinPriceHistory[c.Name()] = append(currentPriceHistory, coinPrices[c.Name()])
 	    	coinPrices[c.Name()] = c.DailyPriceAdjustment(price)
-	    }
-	}		
-
+	        }
+	    }		
 	return totalCap
 }
 
