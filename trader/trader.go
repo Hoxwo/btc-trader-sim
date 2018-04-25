@@ -6,13 +6,13 @@ type Trader struct {
     name string
     savingsBalance float64
     savingsBalanceHistory []float64
-    coinBalancesMap map[string]float64
-    coinBalancesHistoryMap map[string][]float64
+    coinBalancesMap map[string]int
+    coinBalancesHistoryMap map[string][]int
 }
 
-func New(name string, savingsBalance float64) Trader {
-    t := Trader {name, savingsBalance, make([]float64, 5900), 
-		 make(map[string]float64), make(map[string][]float64, 5900)}
+func New(name string, savingsBalance float64, initialCoinBalancesMap map[string]int) Trader {
+    t := Trader {name, savingsBalance, make([]float64,0), 
+		 initialCoinBalancesMap, make(map[string][]int,0)}
     return t
 }
 
@@ -28,9 +28,9 @@ func (t Trader) SavingsBalanceOnDay(daysSinceStart int) float64 {
     return t.savingsBalanceHistory[daysSinceStart]
 }
 
-func (t Trader) RecordBalances(daysSinceStart int) {
+func (t *Trader) RecordBalances(dayCounter int) {
     // record savings balance
-    t.savingsBalanceHistory[daysSinceStart] = t.savingsBalance
+    t.savingsBalanceHistory[dayCounter] = t.savingsBalance
     
     // record coin balances
     for k, _ := range t.coinBalancesMap {
@@ -40,15 +40,22 @@ func (t Trader) RecordBalances(daysSinceStart int) {
 }
 
 func (t Trader) OwnedCoins() []string {
-    coins := make([]string, 0, len(t.coinBalancesMap))
+    coins := make([]string, 0)
     for k := range t.coinBalancesMap {
-        coins = append(coins, k)
+	if(t.coinBalancesMap[k] != 0) {
+        	coins = append(coins, k)
+	}
     }
 
     return coins
 }
 
-func (t Trader) HistoricBalanceForCoin(coin string) []float64 {
+func (t Trader) BalanceForCoin(coin string) int {
+	return t.coinBalancesMap[coin]
+}
+
+
+func (t Trader) HistoricBalancesForCoin(coin string) []int {
 	return t.coinBalancesHistoryMap[coin]
 }
 
@@ -56,7 +63,7 @@ func (t Trader) HistoricBalanceForCoin(coin string) []float64 {
 // coinAmount: amount to buy or sell
 // dollarAmount: cost in fiat
 // op: 1 - BUY, 2 - SELL
-func (t Trader) ModifyCoinAndSavingsBalance(coin string, coinAmount float64, dollarAmount float64, op int ) string {
+func (t *Trader) ModifyCoinAndSavingsBalance(coin string, coinAmount int, dollarAmount float64, op int ) string {
   if(op == 1) {
 	current := t.coinBalancesMap[coin]
 	currentSavings := t.savingsBalance

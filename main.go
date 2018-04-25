@@ -43,6 +43,8 @@ func main() {
 	selected := 0
 	// current state
 	state := 1 // 1 - watching, 2 - buying, 3 - selling
+	//last player quantity input
+	lastPlayerQuantityInput := 0
 
 	// set up coins
 	// 	       {name,              symbol, price, supply,     launchDay}
@@ -145,8 +147,22 @@ func main() {
 	exchangeValueHistory[e6.Name()] = append(arr2, e6.ValueAdded())
 	exchangeValueHistory[e7.Name()] = append(arr2, e7.ValueAdded())
 
-  	//t := trader.New("kc", 100.00)
-        
+	initialCoinBalancesMap := make(map[string]int,14)
+	initialCoinBalancesMap[c0.Name()] = 0
+	initialCoinBalancesMap[c1.Name()] = 0
+	initialCoinBalancesMap[c2.Name()] = 0
+	initialCoinBalancesMap[c3.Name()] = 0
+	initialCoinBalancesMap[c4.Name()] = 0
+	initialCoinBalancesMap[c5.Name()] = 0
+	initialCoinBalancesMap[c6.Name()] = 0
+	initialCoinBalancesMap[c7.Name()] = 0
+	initialCoinBalancesMap[c8.Name()] = 0
+	initialCoinBalancesMap[c9.Name()] = 0
+	initialCoinBalancesMap[c10.Name()] = 0
+	initialCoinBalancesMap[c11.Name()] = 0
+	initialCoinBalancesMap[c12.Name()] = 0
+	initialCoinBalancesMap[c13.Name()] = 0
+  	t := trader.New("Trader", 100.00, initialCoinBalancesMap)
     
 	//coinPrice := fmt.Sprintf("%s | %.6f \n", c.Name(), c.Price())
     	//playerSavings := fmt.Sprintf("%s has savings balance %.6f \n", t.Name(), t.SavingsBalance())
@@ -163,6 +179,46 @@ func main() {
 	termui.Handle("/sys/kbd/q", func(termui.Event) {
 		termui.StopLoop()
 	})
+
+	termui.Handle("/sys/kbd/1", func(termui.Event) {
+		//if in buying state, player gains 1 of selected coin
+		//	player loses savings equal to value of 1 coin
+		//if in selling state, player loses 1 of selected coin
+		//	player gains savings equal to value of 1 coin
+		lastPlayerQuantityInput = 1
+	})
+	
+	termui.Handle("/sys/kbd/2", func(termui.Event) {
+		lastPlayerQuantityInput = 2
+	})
+	
+	termui.Handle("/sys/kbd/3", func(termui.Event) {
+		lastPlayerQuantityInput = 3
+	})
+	
+	termui.Handle("/sys/kbd/4", func(termui.Event) {
+		lastPlayerQuantityInput = 4
+	})
+	
+	termui.Handle("/sys/kbd/5", func(termui.Event) {
+		lastPlayerQuantityInput = 5
+	})
+	
+	termui.Handle("/sys/kbd/6", func(termui.Event) {
+		lastPlayerQuantityInput = 6
+	})
+	
+	termui.Handle("/sys/kbd/7", func(termui.Event) {
+		lastPlayerQuantityInput = 7
+	})
+	
+	termui.Handle("/sys/kbd/8", func(termui.Event) {
+		lastPlayerQuantityInput = 8
+	})
+
+	termui.Handle("/sys/kbd/9", func(termui.Event) {
+		lastPlayerQuantityInput = 9
+	})		
 
 	termui.Handle("/sys/kbd/b", func(termui.Event) {
 		//player buy
@@ -186,7 +242,6 @@ func main() {
 		}
 	})
 	
-
 	termui.Handle("/timer/1s", func(termui.Event) {
 		currentTime = currentTime.Add(time.Hour * 24 * 1)
 		dayCounter++
@@ -215,6 +270,17 @@ func main() {
 		selectedInfo.BorderLabel = ""
 		selectedInfo.BorderFg = termui.ColorCyan
 		selectedInfo.TextFgColor = termui.ColorGreen
+
+		//trader info
+		traderInfo := termui.NewPar("")		
+		traderInfo = termui.NewPar(TraderInfoText(t, coins))
+		traderInfo.Height = 16
+		traderInfo.Width = 26
+		traderInfo.X = 52
+		traderInfo.Y = 14
+		traderInfo.BorderLabel = "Balances"
+		traderInfo.BorderFg = termui.ColorCyan
+		traderInfo.TextFgColor = termui.ColorGreen			
 	
 		// Short term dollar amounts, or estimate of day until launch
 		shorttermhisttitle0 := ShortTermCoinTitle(coins[0], dayCounter, 0, selected)
@@ -490,11 +556,20 @@ func main() {
 	
 	termui.Render( shorttermhistograms, debug, exchangeGauge0, exchangeGauge1, exchangeGauge2, exchangeGauge3,
 				exchangeGauge4, exchangeGauge5, exchangeGauge6, exchangeGauge7, marketCap, marketShares, 
-				recentNews, sentiment, selectedInfo)
+				recentNews, sentiment, selectedInfo, traderInfo)
 	})
 
 	termui.Loop()
 
+}
+
+func TraderInfoText(t trader.Trader, coins []*coin.Coin) string {
+	traderInfo := ""
+	traderInfo = traderInfo + fmt.Sprintf("Savings Balance: %.2f\n", t.SavingsBalance())
+	for _, c := range coins {
+		traderInfo = traderInfo + fmt.Sprintf("%s: %d\n",c.Name(),t.BalanceForCoin(c.Name()))
+	}
+	return traderInfo
 }
 
 func SelectedCoinTextState1(coins []*coin.Coin, selected int) string {
@@ -767,10 +842,10 @@ func GetHistoricPriceDataForCoin(coin string, coinPriceHistory map[string][]floa
 }
 
 func GetTraderDollarValueForCoin(t trader.Trader, coin string, coinPriceHistory map[string][]float64) []float64 {
-	traderBalance := t.HistoricBalanceForCoin(coin)
+	traderBalance := t.HistoricBalancesForCoin(coin)
 	traderDollarValue := make([]float64, len(traderBalance))
 	for i, _ := range traderBalance {
-		traderDollarValue[i] = (traderBalance[i]*coinPriceHistory[coin][i])
+		traderDollarValue[i] = (float64(traderBalance[i])*coinPriceHistory[coin][i])
 	}
 
 	return traderDollarValue
