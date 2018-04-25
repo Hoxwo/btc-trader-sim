@@ -40,14 +40,14 @@ func main() {
 	c2 := coin.New("Nethereum", 	    "NTH",  0.00,     100,       200)
 	c3 := coin.New("Nethereum Vintage", "NTV",  0.00,     100,       300)	
 	c4 := coin.New("Riddle",            "XRD",  0.00,   50000,       400)
-	c5 := coin.New("Ledge",            "XLG",  0.00,    14000,      1585)				
-	c6 := coin.New("Bancem",            "BNC",  0.00,     850,      1585)
-	c7 := coin.New("ZEO",               "ZEO",  0.00,      70,      1585)
-	c8 := coin.New("YCash",             "YEC",  0.00,       4,      1850)
-	c9 := coin.New("Interstellar",      "ILM",  0.00,   18000,      2215)
-	c10 := coin.New("Bitbeets",          "BBT",  0.00,    2000,     2580)
-	c11 := coin.New("TRAM",             "TRM",  0.00,   70000,      2945)
-	c12 := coin.New("DigiLink",         "DLNK", 0.00,     350,      2945)
+	c5 := coin.New("Ledge",            "XLG",  0.00,    14000,      500)				
+	c6 := coin.New("Bancem",            "BNC",  0.00,     850,      600)
+	c7 := coin.New("ZEO",               "ZEO",  0.00,      70,      700)
+	c8 := coin.New("YCash",             "YEC",  0.00,       4,      700)
+	c9 := coin.New("Interstellar",      "ILM",  0.00,   18000,      700)
+	c10 := coin.New("Bitbeets",          "BBT",  0.00,    2000,     700)
+	c11 := coin.New("TRAM",             "TRM",  0.00,   70000,      700)
+	c12 := coin.New("DigiLink",         "DGL", 0.00,     350,      700)
 	c13 := coin.New("XTRAbits",         "XBI",  0.00,     650,      2945)
 	c14 := coin.New("Silliqa",          "SIL",  0.00,    7000,      1585)
 	
@@ -107,12 +107,12 @@ func main() {
 	//set up exchanges 
 	e0 := exchange.New("Mt Ganx",   10,  250, 0)
 	e1 := exchange.New("GDOX",      0,   500, 100)
-	e2 := exchange.New("BitSaurus", 0,  1000, 2000)
-	e3 := exchange.New("CoinHQ",    0,  1500, 3000)
-	e4 := exchange.New("Czinance",  0,  1000, 3500)
-	e5 := exchange.New("Napoleox",  0,   750, 4000)
-	e6 := exchange.New("YoCoin",    0,   250, 5000)
-	e7 := exchange.New("CoinHawk",  0,   250, 5000)	
+	e2 := exchange.New("BitSaurus", 0,  1000, 200)
+	e3 := exchange.New("CoinHQ",    0,  1500, 300)
+	e4 := exchange.New("Czinance",  0,  1000, 400)
+	e5 := exchange.New("Napoleox",  0,   750, 500)
+	e6 := exchange.New("YoCoin",    0,   250, 600)
+	e7 := exchange.New("CoinHawk",  0,   250, 700)	
 
 	// add to master list
 	exchanges = append(exchanges, &e0, &e1, &e2, &e3, &e4, &e5, &e6, &e7)
@@ -267,7 +267,7 @@ func main() {
 		shorttermhistograms.Width = 32
 		shorttermhistograms.Y = 4
 		shorttermhistograms.X = 0
-		shorttermhistograms.BorderLabel = "Short Term $ History"
+		shorttermhistograms.BorderLabel = "Coin - supply - price"
 		
 		//List of exchanges - presented as gauges of total cap
 		exchangeGauge0 := termui.NewGauge()
@@ -389,10 +389,13 @@ func main() {
 				MarketShareForCoin(coinMarketShares,coins[2]),MarketShareForCoin(coinMarketShares,coins[3]),
 				 MarketShareForCoin(coinMarketShares,coins[4]),MarketShareForCoin(coinMarketShares,coins[5]),
 					MarketShareForCoin(coinMarketShares,coins[6]), MarketShareForCoin(coinMarketShares,coins[7]), 						MarketShareForCoin(coinMarketShares,coins[8]),MarketShareForCoin(coinMarketShares,coins[9]),
-					 MarketShareForCoin(coinMarketShares,coins[10]), MarketShareForCoin(coinMarketShares,coins[11])}
+					 MarketShareForCoin(coinMarketShares,coins[10]), MarketShareForCoin(coinMarketShares,coins[11]),
+					MarketShareForCoin(coinMarketShares,coins[12]), MarketShareForCoin(coinMarketShares,coins[13]),
+					MarketShareForCoin(coinMarketShares,coins[14])}
 		labels := []string{coins[0].Symbol(), coins[1].Symbol(), coins[2].Symbol(), coins[3].Symbol(),
 					coins[4].Symbol(), coins[5].Symbol(), coins[6].Symbol(), coins[7].Symbol(),
-					coins[8].Symbol(), coins[9].Symbol(), coins[10].Symbol(), coins[11].Symbol()}
+					coins[8].Symbol(), coins[9].Symbol(), coins[10].Symbol(), coins[11].Symbol(),
+					coins[12].Symbol(), coins[13].Symbol(), coins[14].Symbol()}
 		marketShares.BorderLabel = "Market Share by Coin"
 		marketShares.Data = data
 		marketShares.Width = 64
@@ -454,7 +457,7 @@ func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrice
 	    		c.DailyLaunchAdjustment(marketTrend)
 		}
 	    } else if(c.LaunchDay() == dayCounter) {	
-		icoShare := 4
+		icoShare := random(4, 8)
 		if(coinMarketShares["Bitcoin"] > 10) {
 			//take icoShare from BTC
 			newBtcShares := coinMarketShares["Bitcoin"] - icoShare
@@ -524,7 +527,11 @@ func ShortTermCoinTitle(coin *coin.Coin, dayCounter int) string {
 	if(coin.LaunchDay() > dayCounter) {
 		title = fmt.Sprintf("%s - ETA %d days", coin.Symbol(), coin.LaunchDay())
 	} else {
-		title = fmt.Sprintf("%s - $%.2f ", coin.Symbol(), coin.Price())
+		if(coin.Supply() > 1000) {
+			title = fmt.Sprintf("%s - %d Bil - $%.2f", coin.Symbol(), (coin.Supply()/1000), coin.Price())
+		} else {
+			title = fmt.Sprintf("%s - %d Mil - $%.2f", coin.Symbol(), coin.Supply(), coin.Price())
+		}
 	}
 	
 	return title
