@@ -60,10 +60,10 @@ func main() {
 	c7 := coin.New("ZEO",               "ZEO",  0.00,      70,       400)
 	c8 := coin.New("YCash",             "YEC",  0.00,       4,       500)
 	c9 := coin.New("Interstellar",      "ILM",  0.00,   18000,       550)
-	c10 := coin.New("Bitbeets",          "BBT",  0.00,   2000,       600)
-	c11 := coin.New("TRAM",             "TRM",  0.00,   70000,       620)
-	c12 := coin.New("DigiLink",         "DGL", 0.00,      350,       650)
-	c13 := coin.New("XTRAbits",         "XBI",  0.00,     650,       680)
+	c10 := coin.New("Bitbeets",          "BBT",  0.00,   2000,       800)
+	c11 := coin.New("TRAM",             "TRM",  0.00,   70000,       920)
+	c12 := coin.New("DigiLink",         "DGL", 0.00,      350,       950)
+	c13 := coin.New("XTRAbits",         "XBI",  0.00,     650,       1020)
 	
 	//add em to our master list
 	coins = append(coins, &c0, &c1, &c2, &c3, &c4, &c5, &c6, &c7, &c8, &c9, &c10, &c11, &c12, &c13)
@@ -121,11 +121,11 @@ func main() {
 	e0 := exchange.New("Mt Ganx",   4,    35,   0)
 	e1 := exchange.New("GDOX",      0,   195,  75)
 	e2 := exchange.New("BitSaurus", 0,   570, 120)
-	e3 := exchange.New("CoinHQ",    0,  1800, 300)
-	e4 := exchange.New("Czinance",  0,  1250, 400)
-	e5 := exchange.New("Napoleox",  0,  1000, 500)
-	e6 := exchange.New("YoCoin",    0,   350, 600)
-	e7 := exchange.New("CoinHawk",  0,   300, 700)	
+	e3 := exchange.New("CoinHQ",    0,  1800, 350)
+	e4 := exchange.New("Czinance",  0,  1250, 500)
+	e5 := exchange.New("Napoleox",  0,  1000, 600)
+	e6 := exchange.New("YoCoin",    0,   350, 660)
+	e7 := exchange.New("CoinHawk",  0,   300, 800)	
 
 	// add to master list
 	exchanges = append(exchanges, &e0, &e1, &e2, &e3, &e4, &e5, &e6, &e7)
@@ -876,17 +876,17 @@ func TraderInfoText(t trader.Trader, coins []*coin.Coin) string {
 
 func SelectedCoinTextState1(coins []*coin.Coin, selected int) string {
 	//show selected coin name, b to buy, s to sell
-	return fmt.Sprintf("%s (%s)\n[b] to buy\n[s] to sell\n\n[k]select up\n[m]select down",coins[selected].Name(), coins[selected].Symbol())
+	return fmt.Sprintf("%s (%s)\n[b] to buy\n[s] to sell\n\n[k,<]select up\n[m,>]select down",coins[selected].Name(), coins[selected].Symbol())
 }
 
 func SelectedCoinTextState2(coins []*coin.Coin, selected int) string {
 	//show name, quantity, enter quantity to buy, 1-9
-	return fmt.Sprintf("%s (%s)\nBUY\nEnter [1-9]\n\n[x] to exit",coins[selected].Name(), coins[selected].Symbol())
+	return fmt.Sprintf("%s (%s)\nBUY\nEnter [1-9]\n\n[x] to exit\n[<,>] to scroll coins",coins[selected].Name(), coins[selected].Symbol())
 }
 
 func SelectedCoinTextState3(coins []*coin.Coin, selected int) string {
 	//show name, quantity, enter quantity to sell, 1-9
-	return fmt.Sprintf("%s (%s)\nSELL\nEnter [1-9]\n\n[x] to exit",coins[selected].Name(), coins[selected].Symbol())
+	return fmt.Sprintf("%s (%s)\nSELL\nEnter [1-9]\n\n[x] to exit\n[<,>] to scroll coins",coins[selected].Name(), coins[selected].Symbol())
 }
 
 func GenerateTweets(coins []*coin.Coin) map[string]int {
@@ -905,7 +905,7 @@ func GenerateNews(coins []*coin.Coin, dayCounter int) string {
 	randomIdx := (random(1,15)-1)
 	news := ""	
 	
-	if(chanceOfNews % 2 == 0) {
+	if(chanceOfNews % 2 == 0 || randomIdx == 0 || randomIdx == 2) { //BTC always gets its news, so does NTH
 		if(coins[randomIdx].LaunchDay() < dayCounter) {
 			eventStringRandomizer := random(1,7)
 			if(eventStringRandomizer == 1) {

@@ -67,7 +67,10 @@ func (e *Exchange) DailyValueAdjustment(totalMarketCap int, marketTrend int) int
 	}
 
 	if (marketTrend == 1) {
-	    dailyGains := random(5, 19)
+	    dailyGains := random(5, 21)
+	    if(dailyGains == 17 || dailyGains == 19) {
+		dailyGains = 3 //nerfing the top end
+	    }
 	    if ((e.ValueAdded() + 1) + int(percent.Percent(dailyGains, int(e.ValueAdded()))) < e.MaxValueAdded()) {
 	    	e.SetValueAdded(e.ValueAdded() + int(percent.Percent(dailyGains, int(e.ValueAdded()+modifier))))
 	    }
