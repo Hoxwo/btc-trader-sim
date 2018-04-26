@@ -51,19 +51,19 @@ func main() {
 	// set up coins
 	// 	       {name,              symbol, price, supply,     launchDay}
 	c0 := coin.New("Bitcoin",           "BTC",  0.00,      21,         0)
-	c1 := coin.New("LightCoin",         "LGC",  0.00,      55,       100)
-	c2 := coin.New("Nethereum", 	    "NTH",  0.00,     100,       200)
-	c3 := coin.New("Nethereum Vintage", "NTV",  0.00,     100,       300)	
-	c4 := coin.New("Riddle",            "XRD",  0.00,   50000,       400)
-	c5 := coin.New("Ledge",            "XLG",  0.00,    14000,       500)				
-	c6 := coin.New("Bancem",            "BNC",  0.00,     850,       600)
-	c7 := coin.New("ZEO",               "ZEO",  0.00,      70,       700)
-	c8 := coin.New("YCash",             "YEC",  0.00,       4,       800)
-	c9 := coin.New("Interstellar",      "ILM",  0.00,   18000,       900)
-	c10 := coin.New("Bitbeets",          "BBT",  0.00,   2000,      1000)
-	c11 := coin.New("TRAM",             "TRM",  0.00,   70000,      1100)
-	c12 := coin.New("DigiLink",         "DGL", 0.00,      350,      1200)
-	c13 := coin.New("XTRAbits",         "XBI",  0.00,     650,      1300)
+	c1 := coin.New("LightCoin",         "LGC",  0.00,      55,        60)
+	c2 := coin.New("Nethereum", 	    "NTH",  0.00,     100,       120)
+	c3 := coin.New("Nethereum Vintage", "NTV",  0.00,     100,       150)	
+	c4 := coin.New("Riddle",            "XRD",  0.00,   50000,       240)
+	c5 := coin.New("Ledge",            "XLG",  0.00,    14000,       270)				
+	c6 := coin.New("Bancem",            "BNC",  0.00,     850,       300)
+	c7 := coin.New("ZEO",               "ZEO",  0.00,      70,       400)
+	c8 := coin.New("YCash",             "YEC",  0.00,       4,       500)
+	c9 := coin.New("Interstellar",      "ILM",  0.00,   18000,       550)
+	c10 := coin.New("Bitbeets",          "BBT",  0.00,   2000,       600)
+	c11 := coin.New("TRAM",             "TRM",  0.00,   70000,       620)
+	c12 := coin.New("DigiLink",         "DGL", 0.00,      350,       650)
+	c13 := coin.New("XTRAbits",         "XBI",  0.00,     650,       680)
 	
 	//add em to our master list
 	coins = append(coins, &c0, &c1, &c2, &c3, &c4, &c5, &c6, &c7, &c8, &c9, &c10, &c11, &c12, &c13)
@@ -118,14 +118,14 @@ func main() {
 	coinMarketShares[c13.Name()] = 0
 
 	//set up exchanges  
-	e0 := exchange.New("Mt Ganx",   10,   50,   0)
-	e1 := exchange.New("GDOX",      0,   300, 100)
-	e2 := exchange.New("BitSaurus", 0,   800, 200)
-	e3 := exchange.New("CoinHQ",    0,  1750, 300)
+	e0 := exchange.New("Mt Ganx",   4,    30,   0)
+	e1 := exchange.New("GDOX",      0,   200,  75)
+	e2 := exchange.New("BitSaurus", 0,   570, 120)
+	e3 := exchange.New("CoinHQ",    0,  1800, 300)
 	e4 := exchange.New("Czinance",  0,  1250, 400)
-	e5 := exchange.New("Napoleox",  0,   850, 500)
-	e6 := exchange.New("YoCoin",    0,   250, 600)
-	e7 := exchange.New("CoinHawk",  0,   250, 700)	
+	e5 := exchange.New("Napoleox",  0,  1000, 500)
+	e6 := exchange.New("YoCoin",    0,   350, 600)
+	e7 := exchange.New("CoinHawk",  0,   300, 700)	
 
 	// add to master list
 	exchanges = append(exchanges, &e0, &e1, &e2, &e3, &e4, &e5, &e6, &e7)
@@ -508,7 +508,7 @@ func main() {
 
 		shorttermhisttitle1 := ShortTermCoinTitle(coins[1], dayCounter, 1, selected)
 		shorttermhist1 := termui.NewSparkline()
-		shorttermhist1.Data = FloatToInts(GetHistoricPriceDataForCoin("Lightcoin", coinPriceHistory))
+		shorttermhist1.Data = FloatToInts(GetHistoricPriceDataForCoin("LightCoin", coinPriceHistory))
 		shorttermhist1.Title = shorttermhisttitle1
 		shorttermhist1.LineColor = termui.ColorGreen
 
