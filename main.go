@@ -401,24 +401,6 @@ func main() {
 		m := int(currentTime.Month())		
 		if( m == 8 || m == 9 || m == 10 || m == 2 || m == 3 || m == 4) {
 			// make trend sticky
-			if( marketTrend == 1 || marketTrend == 2) {
-				sixSidedDie = sixSidedDie - 1
-				if (strings.Compare(news, "") != 0) {
-					sixSidedDie = sixSidedDie - 1
-				}		
-			}	
-
-			if (sixSidedDie <= 2) {
-					marketTrend = 1
-			} else if (sixSidedDie == 3 || sixSidedDie == 4) {
-				marketTrend = 2
-			} else if (sixSidedDie == 5) {
-				marketTrend = 3
-			} else {
-				marketTrend = 4
-			}	
-		} else { 
-			// make trend sticky
 			if( marketTrend == 3 || marketTrend == 4) {
 				sixSidedDie = sixSidedDie - 1
 				if (strings.Compare(news, "") != 0) {
@@ -435,7 +417,24 @@ func main() {
 			} else {
 				marketTrend = 1
 			}	
-		
+		} else { 
+			// make trend sticky
+			if( marketTrend == 1 || marketTrend == 2) {
+				sixSidedDie = sixSidedDie - 1
+				if (strings.Compare(news, "") != 0) {
+					sixSidedDie = sixSidedDie - 1
+				}		
+			}	
+
+			if (sixSidedDie <= 2) {
+					marketTrend = 1
+			} else if (sixSidedDie == 3 || sixSidedDie == 4) {
+				marketTrend = 2
+			} else if (sixSidedDie == 5) {
+				marketTrend = 3
+			} else {
+				marketTrend = 4
+			}	
 		} 
 		
 		totalMarketCap = AdvanceOneDay(coins, exchanges, coinPrices, exchangeValues, coinPriceHistory, exchangeValueHistory, 							    coinMarketShares, dayCounter, marketTrend, news, &newsHistory, &t)
@@ -754,10 +753,10 @@ func main() {
 		messages := termui.NewList()	
 		if(len(messageHistory) == 0) {		
 			recentNews.Items = make([]string,0)
-		} else if(len(messageHistory) < 3) {
+		} else if(len(messageHistory) < 4) {
 			messages.Items = messageHistory[:len(messageHistory)]
 		} else {
-			messages.Items = messageHistory[len(messageHistory)-3:len(messageHistory)]
+			messages.Items = messageHistory[len(messageHistory)-4:len(messageHistory)]
 		}
 		messages.ItemFgColor = termui.ColorCyan
 		messages.BorderLabel = fmt.Sprintf("Messages")
