@@ -50,7 +50,7 @@ func main() {
 
 	// set up coins
 	// 	       {name,              symbol, price, supply,     launchDay}
-	c0 := coin.New("Bitcoin",           "BTC",  0.00,      20,         0)
+	c0 := coin.New("Bitcoin",           "BTC",  0.00,      21,         0)
 	c1 := coin.New("LightCoin",         "LGC",  0.00,      55,       100)
 	c2 := coin.New("Nethereum", 	    "NTH",  0.00,     100,       200)
 	c3 := coin.New("Nethereum Vintage", "NTV",  0.00,     100,       300)	
@@ -189,144 +189,180 @@ func main() {
 	termui.Handle("/sys/kbd/1", func(termui.Event) {
 		lastPlayerQuantityInput = 1		
 		message := ""
-		if(state == 2) {
-			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
-								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 1) 
-		} else if(state == 3) {
-			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
-								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 2)
+		if(coins[selected].LaunchDay() > dayCounter) {
+			message = "Coin not available"
+		} else {
+			if(state == 2) {
+				message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+									(float64(lastPlayerQuantityInput)*coins[selected].Price()), 1) 
+			} else if(state == 3) {
+				message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+									(float64(lastPlayerQuantityInput)*coins[selected].Price()), 2)
+			}
 		}
 		//save message
 		if(strings.Compare(message,"") != 0) {
-			messageHistory = append(messageHistory, message)
+				messageHistory = append(messageHistory, message)
 		}
 	})
 	
 	termui.Handle("/sys/kbd/2", func(termui.Event) {
 		lastPlayerQuantityInput = 2
 		message := ""
-		if(state == 2) {
-			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
-								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 1) 
-		} else if(state == 3) {
-			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
-								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 2)
+		if(coins[selected].LaunchDay() > dayCounter) {
+			message = "Coin not available"
+		} else {
+			if(state == 2) {
+				message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+									(float64(lastPlayerQuantityInput)*coins[selected].Price()), 1) 
+			} else if(state == 3) {
+				message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+									(float64(lastPlayerQuantityInput)*coins[selected].Price()), 2)
+			}
 		}
 		//save message
 		if(strings.Compare(message,"") != 0) {
-			messageHistory = append(messageHistory, message)
+				messageHistory = append(messageHistory, message)
 		}
 	})
 	
 	termui.Handle("/sys/kbd/3", func(termui.Event) {
 		lastPlayerQuantityInput = 3
 		message := ""
-		if(state == 2) {
-			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
-								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 1) 
-		} else if(state == 3) {
-			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
-								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 2)
+		if(coins[selected].LaunchDay() > dayCounter) {
+			message = "Coin not available"
+		} else {
+			if(state == 2) {
+				message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+									(float64(lastPlayerQuantityInput)*coins[selected].Price()), 1) 
+			} else if(state == 3) {
+				message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+									(float64(lastPlayerQuantityInput)*coins[selected].Price()), 2)
+			}
 		}
 		//save message
 		if(strings.Compare(message,"") != 0) {
-			messageHistory = append(messageHistory, message)
+				messageHistory = append(messageHistory, message)
 		}
 	})
 	
 	termui.Handle("/sys/kbd/4", func(termui.Event) {
 		lastPlayerQuantityInput = 4
 		message := ""
-		if(state == 2) {
-			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
-								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 1) 
-		} else if(state == 3) {
-			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
-								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 2)
+		if(coins[selected].LaunchDay() > dayCounter) {
+			message = "Coin not available"
+		} else {
+			if(state == 2) {
+				message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+									(float64(lastPlayerQuantityInput)*coins[selected].Price()), 1) 
+			} else if(state == 3) {
+				message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+									(float64(lastPlayerQuantityInput)*coins[selected].Price()), 2)
+			}
 		}
 		//save message
 		if(strings.Compare(message,"") != 0) {
-			messageHistory = append(messageHistory, message)
+				messageHistory = append(messageHistory, message)
 		}
 	})
 	
 	termui.Handle("/sys/kbd/5", func(termui.Event) {
 		lastPlayerQuantityInput = 5
 		message := ""
-		if(state == 2) {
-			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
-								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 1) 
-		} else if(state == 3) {
-			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
-								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 2)
+		if(coins[selected].LaunchDay() > dayCounter) {
+			message = "Coin not available"
+		} else {
+			if(state == 2) {
+				message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+									(float64(lastPlayerQuantityInput)*coins[selected].Price()), 1) 
+			} else if(state == 3) {
+				message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+									(float64(lastPlayerQuantityInput)*coins[selected].Price()), 2)
+			}
 		}
 		//save message
 		if(strings.Compare(message,"") != 0) {
-			messageHistory = append(messageHistory, message)
+				messageHistory = append(messageHistory, message)
 		}
 	})
 	
 	termui.Handle("/sys/kbd/6", func(termui.Event) {
 		lastPlayerQuantityInput = 6
 		message := ""
-		if(state == 2) {
-			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
-								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 1) 
-		} else if(state == 3) {
-			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
-								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 2)
+		if(coins[selected].LaunchDay() > dayCounter) {
+			message = "Coin not available"
+		} else {
+			if(state == 2) {
+				message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+									(float64(lastPlayerQuantityInput)*coins[selected].Price()), 1) 
+			} else if(state == 3) {
+				message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+									(float64(lastPlayerQuantityInput)*coins[selected].Price()), 2)
+			}
 		}
 		//save message
 		if(strings.Compare(message,"") != 0) {
-			messageHistory = append(messageHistory, message)
+				messageHistory = append(messageHistory, message)
 		}
 	})
 	
 	termui.Handle("/sys/kbd/7", func(termui.Event) {
 		lastPlayerQuantityInput = 7
 		message := ""
-		if(state == 2) {
-			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
-								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 1) 
-		} else if(state == 3) {
-			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
-								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 2)
+		if(coins[selected].LaunchDay() > dayCounter) {
+			message = "Coin not available"
+		} else {
+			if(state == 2) {
+				message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+									(float64(lastPlayerQuantityInput)*coins[selected].Price()), 1) 
+			} else if(state == 3) {
+				message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+									(float64(lastPlayerQuantityInput)*coins[selected].Price()), 2)
+			}
 		}
 		//save message
 		if(strings.Compare(message,"") != 0) {
-			messageHistory = append(messageHistory, message)
+				messageHistory = append(messageHistory, message)
 		}
 	})
 	
 	termui.Handle("/sys/kbd/8", func(termui.Event) {
 		lastPlayerQuantityInput = 8
 		message := ""
-		if(state == 2) {
-			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
-								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 1) 
-		} else if(state == 3) {
-			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
-								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 2)
+		if(coins[selected].LaunchDay() > dayCounter) {
+			message = "Coin not available"
+		} else {
+			if(state == 2) {
+				message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+									(float64(lastPlayerQuantityInput)*coins[selected].Price()), 1) 
+			} else if(state == 3) {
+				message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+									(float64(lastPlayerQuantityInput)*coins[selected].Price()), 2)
+			}
 		}
 		//save message
 		if(strings.Compare(message,"") != 0) {
-			messageHistory = append(messageHistory, message)
+				messageHistory = append(messageHistory, message)
 		}
 	})
 
 	termui.Handle("/sys/kbd/9", func(termui.Event) {
 		lastPlayerQuantityInput = 9
 		message := ""
-		if(state == 2) {
-			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
-								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 1) 
-		} else if(state == 3) {
-			message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
-								(float64(lastPlayerQuantityInput)*coins[selected].Price()), 2)
+		if(coins[selected].LaunchDay() > dayCounter) {
+			message = "Coin not available"
+		} else {
+			if(state == 2) {
+				message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+									(float64(lastPlayerQuantityInput)*coins[selected].Price()), 1) 
+			} else if(state == 3) {
+				message = t.ModifyCoinAndSavingsBalance(coins[selected].Name(), lastPlayerQuantityInput, 
+									(float64(lastPlayerQuantityInput)*coins[selected].Price()), 2)
+			}
 		}
 		//save message
 		if(strings.Compare(message,"") != 0) {
-			messageHistory = append(messageHistory, message)
+				messageHistory = append(messageHistory, message)
 		}
 	})		
 
@@ -360,12 +396,47 @@ func main() {
 	termui.Handle("/timer/1s", func(termui.Event) {
 		currentTime = currentTime.Add(time.Hour * 24 * 1)
 		dayCounter++
-		marketTrend = 1
-		fourSidedDie := random(1,5)
-		downturnChance := random(1,3)
-		if (downturnChance == 2) {
-			marketTrend = fourSidedDie
-		}
+
+		sixSidedDie := random(1,7)
+		m := int(currentTime.Month())		
+		if( m == 8 || m == 9 || m == 10 || m == 2 || m == 3 || m == 4) {
+			// make trend sticky
+			if( marketTrend == 1 || marketTrend == 2) {
+				sixSidedDie = sixSidedDie - 1
+				if (strings.Compare(news, "") != 0) {
+					sixSidedDie = sixSidedDie - 1
+				}		
+			}	
+
+			if (sixSidedDie <= 2) {
+					marketTrend = 1
+			} else if (sixSidedDie == 3 || sixSidedDie == 4) {
+				marketTrend = 2
+			} else if (sixSidedDie == 5) {
+				marketTrend = 3
+			} else {
+				marketTrend = 4
+			}	
+		} else { 
+			// make trend sticky
+			if( marketTrend == 3 || marketTrend == 4) {
+				sixSidedDie = sixSidedDie - 1
+				if (strings.Compare(news, "") != 0) {
+					sixSidedDie = sixSidedDie + 1
+				}
+			}	
+	
+			if (sixSidedDie <= 2) {
+				marketTrend = 4
+			} else if (sixSidedDie == 3 || sixSidedDie == 4) {
+				marketTrend = 3
+			} else if (sixSidedDie == 5) {
+				marketTrend = 2
+			} else {
+				marketTrend = 1
+			}	
+		
+		} 
 		
 		totalMarketCap = AdvanceOneDay(coins, exchanges, coinPrices, exchangeValues, coinPriceHistory, exchangeValueHistory, 							    coinMarketShares, dayCounter, marketTrend, news, &newsHistory, &t)
 		
@@ -378,10 +449,10 @@ func main() {
 		} else {
 			selectedInfo = termui.NewPar(SelectedCoinTextState3(coins, selected))
 		}
-		selectedInfo.Height = 10
-		selectedInfo.Width = 19
-		selectedInfo.X = 32
-		selectedInfo.Y = 14
+		selectedInfo.Height = 8
+		selectedInfo.Width = 21
+		selectedInfo.X = 30
+		selectedInfo.Y = 16
 		selectedInfo.BorderLabel = ""
 		selectedInfo.BorderFg = termui.ColorCyan
 		selectedInfo.TextFgColor = termui.ColorGreen
@@ -399,9 +470,13 @@ func main() {
 	
 		//savings history
 		savingsHistory := termui.NewLineChart()
-		savingsHistory.BorderLabel = "Savings History"
+		savingsHistory.BorderLabel = "Savings"
 		savingsHistory.Mode = "dot"
-		savingsHistory.Data = t.SavingsBalanceHistory()
+		if(dayCounter < 27) {
+			savingsHistory.Data = t.SavingsBalanceHistory()[:dayCounter]
+		} else {
+			savingsHistory.Data = t.SavingsBalanceHistory()[dayCounter-27:dayCounter]
+		}
 		savingsHistory.Width = 27	
 		savingsHistory.Height = 6
 		savingsHistory.X = 51
@@ -413,10 +488,14 @@ func main() {
 		//Coin Worth $
 		coinWorth := termui.NewLineChart()
 		coinWorth.BorderLabel = "Crypto Net Worth $"
-		coinWorth.Data = GetTraderDollarValueForAllCoins(t, coinPriceHistory, dayCounter)
-		coinWorth.Width = 19
+		if(dayCounter < 21) {
+			coinWorth.Data = GetHistoricTotalMarketCapAsFloatArray(exchangeValueHistory)[:dayCounter]
+		} else {
+			coinWorth.Data = GetTraderDollarValueForAllCoins(t, coinPriceHistory, dayCounter)[dayCounter-21:dayCounter]			
+		}
+		coinWorth.Width = 21
 		coinWorth.Height = 10
-		coinWorth.X = 32
+		coinWorth.X = 30
 		coinWorth.Y = 24
 		coinWorth.AxesColor = termui.ColorWhite
 		coinWorth.LineColor = termui.ColorYellow
@@ -513,7 +592,7 @@ func main() {
 					shorttermhist9, shorttermhist10, shorttermhist11,
 					shorttermhist12, shorttermhist13)
 		shorttermhistograms.Height = 30
-		shorttermhistograms.Width = 32
+		shorttermhistograms.Width = 30
 		shorttermhistograms.Y = 4
 		shorttermhistograms.X = 0
 		shorttermhistograms.BorderLabel = "Coin - supply - price"
@@ -619,10 +698,10 @@ func main() {
 		marketCap.BorderLabel = MarketCapInfoString(totalMarketCap)
 		marketCap.Mode = "dot"
 		marketCapWindow := make([]float64, 30)
-		if(dayCounter < 31) {
-			marketCapWindow = GetHistoricTotalMarketCapAsFloatArray(exchangeValueHistory)[:dayCounter-1]
+		if(dayCounter < 28) {
+			marketCapWindow = GetHistoricTotalMarketCapAsFloatArray(exchangeValueHistory)[:dayCounter]
 		} else {
-			marketCapWindow = GetHistoricTotalMarketCapAsFloatArray(exchangeValueHistory)[dayCounter-31:dayCounter-1]			
+			marketCapWindow = GetHistoricTotalMarketCapAsFloatArray(exchangeValueHistory)[dayCounter-28:dayCounter]			
 		}
 		marketCap.Data = marketCapWindow	
 		marketCap.Width = 28
@@ -659,17 +738,17 @@ func main() {
 		recentNews := termui.NewList()	
 		if(len(newsHistory) == 0) {		
 			recentNews.Items = make([]string,0)
-		} else if(len(newsHistory) < 6) {
+		} else if(len(newsHistory) < 4) {
 			recentNews.Items = newsHistory[:len(newsHistory)]
 		} else {
-			recentNews.Items = newsHistory[len(newsHistory)-6:len(newsHistory)]
+			recentNews.Items = newsHistory[len(newsHistory)-4:len(newsHistory)]
 		}
 		recentNews.ItemFgColor = termui.ColorWhite
 		recentNews.BorderLabel = fmt.Sprintf("Latest News")
 		recentNews.Height = 6
-		recentNews.Width = 46
+		recentNews.Width = 48
 		recentNews.Y = 4
-		recentNews.X = 32
+		recentNews.X = 30
 
 		//messages for player
 		messages := termui.NewList()	
@@ -682,10 +761,10 @@ func main() {
 		}
 		messages.ItemFgColor = termui.ColorCyan
 		messages.BorderLabel = fmt.Sprintf("Messages")
-		messages.Height = 4
-		messages.Width = 19
+		messages.Height = 6
+		messages.Width = 21
 		messages.Y = 10
-		messages.X = 32
+		messages.X = 30
 
 		//market sentiment
 		sentiment := termui.NewPar(SentimentString(marketTrend))
@@ -730,7 +809,7 @@ func TraderInfoText(t trader.Trader, coins []*coin.Coin) string {
 
 func SelectedCoinTextState1(coins []*coin.Coin, selected int) string {
 	//show selected coin name, b to buy, s to sell
-	return fmt.Sprintf("%s (%s)\n[b] to buy\n[s] to sell\nplayer quant\n\n[k]select up\n[m]select down",coins[selected].Name(), coins[selected].Symbol())
+	return fmt.Sprintf("%s (%s)\n[b] to buy\n[s] to sell\n\n[k]select up\n[m]select down",coins[selected].Name(), coins[selected].Symbol())
 }
 
 func SelectedCoinTextState2(coins []*coin.Coin, selected int) string {
@@ -759,7 +838,7 @@ func GenerateNews(coins []*coin.Coin, dayCounter int) string {
 	randomIdx := (random(1,15)-1)
 	news := ""	
 	
-	if(chanceOfNews % 3 == 0) {
+	if(chanceOfNews % 2 == 0) {
 		if(coins[randomIdx].LaunchDay() < dayCounter) {
 			eventStringRandomizer := random(1,7)
 			if(eventStringRandomizer == 1) {
@@ -839,6 +918,9 @@ func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrice
 		var capShare float64 =  float64(float64(totalCap)*float64(1000)) /* how many millions */ * 
 					float64(float64(MarketShareForCoin(coinMarketShares, c))/float64(100))
 		price := capShare / float64(c.Supply())
+		if(price == 0.0) {
+			price = 0.01
+		}
 	    	currentPriceHistory := coinPriceHistory[c.Name()]
 	    	delete(coinPriceHistory, c.Name())
 	    	coinPriceHistory[c.Name()] = append(currentPriceHistory, coinPrices[c.Name()])

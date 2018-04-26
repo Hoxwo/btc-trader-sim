@@ -54,29 +54,41 @@ func random(min, max int) int {
 }
 
 func (e *Exchange) DailyValueAdjustment(totalMarketCap int, marketTrend int) int {
+	//modifier to make exchanges less prone to crashing for a long time
+	modifier := 10
+	if(e.ValueAdded() < 10 && (marketTrend == 1 || marketTrend == 2)) {
+		modifier = 25		
+	} else if (e.ValueAdded() < 20 && (marketTrend == 1 || marketTrend == 2)) {
+		modifier = 20
+	} else if (e.ValueAdded() < 20 && (marketTrend == 3)) {
+		modifier = 5
+	} else if (e.ValueAdded() < 20 && (marketTrend == 4)) {
+		modifier = 0
+	}
+
 	if (marketTrend == 1) {
 	    dailyGains := random(5, 12)
 	    if ((e.ValueAdded() + 1) + int(percent.Percent(dailyGains, int(e.ValueAdded()))) < e.MaxValueAdded()) {
-	    	e.SetValueAdded(e.ValueAdded() + int(percent.Percent(dailyGains, int(e.ValueAdded()+20))))
+	    	e.SetValueAdded(e.ValueAdded() + int(percent.Percent(dailyGains, int(e.ValueAdded()+modifier))))
 	    }
 	} else if (marketTrend == 2) {
 	    dailyGains := random(1, 5)
 	    if ((e.ValueAdded() + 1) + int(percent.Percent(dailyGains, int(e.ValueAdded()))) < e.MaxValueAdded()) {
-	     	e.SetValueAdded(e.ValueAdded() + int(percent.Percent(dailyGains, int(e.ValueAdded()+20))))
+	     	e.SetValueAdded(e.ValueAdded() + int(percent.Percent(dailyGains, int(e.ValueAdded()+modifier))))
 	    }
 	} else if (marketTrend == 3) {
-	    dailyGains := random(1, 5)
-	    if (dailyGains > e.ValueAdded()) {
+	    dailyGains := random(1, 4)
+	    if (e.ValueAdded() - int(percent.Percent(dailyGains, int(e.ValueAdded()))) <= 0) {
 		e.SetValueAdded(0)
 	    } else {
-		e.SetValueAdded(e.ValueAdded() - int(percent.Percent(dailyGains, int(e.ValueAdded()+20))))
+		e.SetValueAdded(e.ValueAdded() - int(percent.Percent(dailyGains, int(e.ValueAdded()+modifier))))
 	    }
 	} else {	
-	    dailyGains := random(5, 12)
-	    if (dailyGains > e.ValueAdded()) {
+	    dailyGains := random(4, 15)
+	    if (e.ValueAdded() - int(percent.Percent(dailyGains, int(e.ValueAdded()))) <= 0) {
 		e.SetValueAdded(0)
 	    } else {
-		e.SetValueAdded(e.ValueAdded() - int(percent.Percent(dailyGains, int(e.ValueAdded()+20))))
+		e.SetValueAdded(e.ValueAdded() - int(percent.Percent(dailyGains, int(e.ValueAdded()+modifier))))
 	    }
 	}
 
