@@ -892,8 +892,8 @@ func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrice
 	    	delete(coinPriceHistory, c.Name())
 	    	coinPriceHistory[c.Name()] = append(currentPriceHistory, coinPrices[c.Name()])
 	    } else if(c.LaunchDay() == dayCounter) {	
-		icoShare := 2
-		if(coinMarketShares["Bitcoin"] > 10) {
+		icoShare := random(1,5)
+		if(coinMarketShares["Bitcoin"] > 80) {
 			//take icoShare from BTC
 			newBtcShares := coinMarketShares["Bitcoin"] - icoShare
 			delete(coinMarketShares, "Bitcoin")
@@ -910,8 +910,22 @@ func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrice
 	    		coinPriceHistory[c.Name()] = append(currentPriceHistory, coinPrices[c.Name()])
 	    		coinPrices[c.Name()] = c.DailyPriceAdjustment(price)
 		} else {
-		     //grab icoShare from a non-zero coin
-		}
+			sharesToGive := 0
+			for _, c2 := range coins {
+				if(c.LaunchDay() < dayCounter) {	
+					if(coinMarketShares[c2.Name()] > 4) {		
+						previousShares := coinMarketShares[c2.Name()]
+						delete(coinMarketShares, c2.Name())
+						coinMarketShares[c2.Name()] = previousShares - 1		
+						sharesToGive = sharesToGive + 1
+					}
+				}
+
+			}
+			prevShares := coinMarketShares[c.Name()]
+			delete(coinMarketShares, c.Name())		
+			coinMarketShares[c.Name()] = prevShares + sharesToGive
+	 	}
 	    } else {
 		//adjust price and records
 		var capShare float64 =  float64(float64(totalCap)*float64(1000)) /* how many millions */ * 
