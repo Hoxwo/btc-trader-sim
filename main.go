@@ -52,9 +52,9 @@ func main() {
 	// 	       {name,              symbol, price, supply,     launchDay}
 	c0 := coin.New("Bitcoin",           "BTC",  0.00,      21,         0)
 	c1 := coin.New("LightCoin",         "LGC",  0.00,      55,        60)
-	c2 := coin.New("Nethereum", 	    "NTH",  0.00,     100,       120)
-	c3 := coin.New("Nethereum Vintage", "NTV",  0.00,     100,       150)	
-	c4 := coin.New("Riddle",            "XRD",  0.00,   50000,       240)
+	c2 := coin.New("Nethereum", 	    "NTH",  0.00,     100,        90)
+	c3 := coin.New("Nethereum Vintage", "NTV",  0.00,     100,       120)	
+	c4 := coin.New("Riddle",            "XRD",  0.00,   50000,       180)
 	c5 := coin.New("Ledge",            "XLG",  0.00,    14000,       270)				
 	c6 := coin.New("Bancem",            "BNC",  0.00,     850,       300)
 	c7 := coin.New("ZEO",               "ZEO",  0.00,      70,       400)
@@ -118,8 +118,8 @@ func main() {
 	coinMarketShares[c13.Name()] = 0
 
 	//set up exchanges  
-	e0 := exchange.New("Mt Ganx",   4,    30,   0)
-	e1 := exchange.New("GDOX",      0,   200,  75)
+	e0 := exchange.New("Mt Ganx",   4,    35,   0)
+	e1 := exchange.New("GDOX",      0,   195,  75)
 	e2 := exchange.New("BitSaurus", 0,   570, 120)
 	e3 := exchange.New("CoinHQ",    0,  1800, 300)
 	e4 := exchange.New("Czinance",  0,  1250, 400)
@@ -502,85 +502,141 @@ func main() {
 		// Short term dollar amounts, or estimate of day until launch
 		shorttermhisttitle0 := ShortTermCoinTitle(coins[0], dayCounter, 0, selected)
 		shorttermhist0 := termui.NewSparkline()
-		shorttermhist0.Data = FloatToInts(GetHistoricPriceDataForCoin("Bitcoin", coinPriceHistory))
+		if(dayCounter < 30) {
+			shorttermhist0.Data = FloatToInts(GetHistoricPriceDataForCoin("Bitcoin", coinPriceHistory)[:dayCounter])
+		} else {
+			shorttermhist0.Data = FloatToInts(GetHistoricPriceDataForCoin("Bitcoin", coinPriceHistory)[dayCounter-30:dayCounter])
+		}			
 		shorttermhist0.Title = shorttermhisttitle0
 		shorttermhist0.LineColor = termui.ColorCyan
 
 		shorttermhisttitle1 := ShortTermCoinTitle(coins[1], dayCounter, 1, selected)
 		shorttermhist1 := termui.NewSparkline()
-		shorttermhist1.Data = FloatToInts(GetHistoricPriceDataForCoin("LightCoin", coinPriceHistory))
+		if(dayCounter < 30) {
+			shorttermhist1.Data = FloatToInts(GetHistoricPriceDataForCoin("LightCoin", coinPriceHistory)[:dayCounter])
+		} else {
+			shorttermhist1.Data = FloatToInts(GetHistoricPriceDataForCoin("LightCoin", coinPriceHistory)[dayCounter-30:dayCounter])
+		}	
 		shorttermhist1.Title = shorttermhisttitle1
 		shorttermhist1.LineColor = termui.ColorGreen
 
 		shorttermhisttitle2 := ShortTermCoinTitle(coins[2], dayCounter, 2, selected)
 		shorttermhist2 := termui.NewSparkline()
-		shorttermhist2.Data = FloatToInts(GetHistoricPriceDataForCoin("Nethereum", coinPriceHistory))
+		if(dayCounter < 30) {
+			shorttermhist2.Data = FloatToInts(GetHistoricPriceDataForCoin("Nethereum", coinPriceHistory)[:dayCounter])
+		} else {
+			shorttermhist2.Data = FloatToInts(GetHistoricPriceDataForCoin("Nethereum", coinPriceHistory)[dayCounter-30:dayCounter])
+		}	
 		shorttermhist2.Title = shorttermhisttitle2
 		shorttermhist2.LineColor = termui.ColorMagenta
 
 		shorttermhisttitle3 := ShortTermCoinTitle(coins[3], dayCounter, 3, selected)
 		shorttermhist3 := termui.NewSparkline()	
-		shorttermhist3.Data = FloatToInts(GetHistoricPriceDataForCoin("Nethereum Vintage", coinPriceHistory))
+		if(dayCounter < 30) {
+			shorttermhist3.Data = FloatToInts(GetHistoricPriceDataForCoin("Nethereum Vintage", coinPriceHistory)[:dayCounter])
+		} else {
+			shorttermhist3.Data = FloatToInts(GetHistoricPriceDataForCoin("Nethereum Vintage", coinPriceHistory)[dayCounter-30:dayCounter])
+		}	
 		shorttermhist3.Title = shorttermhisttitle3
 		shorttermhist3.LineColor = termui.ColorCyan
 
 		shorttermhisttitle4 := ShortTermCoinTitle(coins[4], dayCounter, 4, selected)
 		shorttermhist4 := termui.NewSparkline()
-		shorttermhist4.Data = FloatToInts(GetHistoricPriceDataForCoin("Riddle", coinPriceHistory))
+		if(dayCounter < 30) {
+			shorttermhist4.Data = FloatToInts(GetHistoricPriceDataForCoin("Riddle", coinPriceHistory)[:dayCounter])
+		} else {
+			shorttermhist4.Data = FloatToInts(GetHistoricPriceDataForCoin("Riddle", coinPriceHistory)[dayCounter-30:dayCounter])
+		}	
 		shorttermhist4.Title = shorttermhisttitle4
 		shorttermhist4.LineColor = termui.ColorGreen
 	
 		shorttermhisttitle5 := ShortTermCoinTitle(coins[5], dayCounter, 5, selected)
 		shorttermhist5 := termui.NewSparkline()
-		shorttermhist5.Data = FloatToInts(GetHistoricPriceDataForCoin("Ledge", coinPriceHistory))
+		if(dayCounter < 30) {
+			shorttermhist5.Data = FloatToInts(GetHistoricPriceDataForCoin("Ledge", coinPriceHistory)[:dayCounter])
+		} else {
+			shorttermhist5.Data = FloatToInts(GetHistoricPriceDataForCoin("Ledge", coinPriceHistory)[dayCounter-30:dayCounter])
+		}	
 		shorttermhist5.Title = shorttermhisttitle5
 		shorttermhist5.LineColor = termui.ColorMagenta
 	
 		shorttermhisttitle6 := ShortTermCoinTitle(coins[6], dayCounter, 6, selected)
 		shorttermhist6 := termui.NewSparkline()
-		shorttermhist6.Data = FloatToInts(GetHistoricPriceDataForCoin("Bancem", coinPriceHistory))
+		if(dayCounter < 30) {
+			shorttermhist6.Data = FloatToInts(GetHistoricPriceDataForCoin("Bancem", coinPriceHistory)[:dayCounter])
+		} else {
+			shorttermhist6.Data = FloatToInts(GetHistoricPriceDataForCoin("Bancem", coinPriceHistory)[dayCounter-30:dayCounter])
+		}	
 		shorttermhist6.Title = shorttermhisttitle6
 		shorttermhist6.LineColor = termui.ColorCyan
 	
 		shorttermhisttitle7 := ShortTermCoinTitle(coins[7], dayCounter, 7, selected)
 		shorttermhist7 := termui.NewSparkline()
-		shorttermhist7.Data = FloatToInts(GetHistoricPriceDataForCoin("ZEO", coinPriceHistory))
+		if(dayCounter < 30) {
+			shorttermhist7.Data = FloatToInts(GetHistoricPriceDataForCoin("ZEO", coinPriceHistory)[:dayCounter])
+		} else {
+			shorttermhist7.Data = FloatToInts(GetHistoricPriceDataForCoin("ZEO", coinPriceHistory)[dayCounter-30:dayCounter])
+		}	
 		shorttermhist7.Title = shorttermhisttitle7
 		shorttermhist7.LineColor = termui.ColorGreen
 
 		shorttermhisttitle8 := ShortTermCoinTitle(coins[8], dayCounter, 8, selected)
 		shorttermhist8 := termui.NewSparkline()
-		shorttermhist8.Data = FloatToInts(GetHistoricPriceDataForCoin("YCash", coinPriceHistory))
+		if(dayCounter < 30) {
+			shorttermhist8.Data = FloatToInts(GetHistoricPriceDataForCoin("YCash", coinPriceHistory)[:dayCounter])
+		} else {
+			shorttermhist8.Data = FloatToInts(GetHistoricPriceDataForCoin("YCash", coinPriceHistory)[dayCounter-30:dayCounter])
+		}	
 		shorttermhist8.Title = shorttermhisttitle8
 		shorttermhist8.LineColor = termui.ColorMagenta
 
 		shorttermhisttitle9 := ShortTermCoinTitle(coins[9], dayCounter, 9, selected)
 		shorttermhist9 := termui.NewSparkline()
-		shorttermhist9.Data = FloatToInts(GetHistoricPriceDataForCoin("Interstellar", coinPriceHistory))
+		if(dayCounter < 30) {
+			shorttermhist9.Data = FloatToInts(GetHistoricPriceDataForCoin("Interstellar", coinPriceHistory)[:dayCounter])
+		} else {
+			shorttermhist9.Data = FloatToInts(GetHistoricPriceDataForCoin("Interstellar", coinPriceHistory)[dayCounter-30:dayCounter])
+		}	
 		shorttermhist9.Title = shorttermhisttitle9
 		shorttermhist9.LineColor = termui.ColorCyan
 
 		shorttermhisttitle10 := ShortTermCoinTitle(coins[10], dayCounter, 10, selected)
 		shorttermhist10 := termui.NewSparkline()
-		shorttermhist10.Data = FloatToInts(GetHistoricPriceDataForCoin("BitBeets", coinPriceHistory))
+		if(dayCounter < 30) {
+			shorttermhist10.Data = FloatToInts(GetHistoricPriceDataForCoin("Bitbeets", coinPriceHistory)[:dayCounter])
+		} else {
+			shorttermhist10.Data = FloatToInts(GetHistoricPriceDataForCoin("Bitbeets", coinPriceHistory)[dayCounter-30:dayCounter])
+		}	
 		shorttermhist10.Title = shorttermhisttitle10
 		shorttermhist10.LineColor = termui.ColorGreen
 
 		shorttermhisttitle11 := ShortTermCoinTitle(coins[11], dayCounter, 11, selected)
 		shorttermhist11 := termui.NewSparkline()
-		shorttermhist11.Data = FloatToInts(GetHistoricPriceDataForCoin("TRAM", coinPriceHistory))
+		if(dayCounter < 30) {
+			shorttermhist11.Data = FloatToInts(GetHistoricPriceDataForCoin("TRAM", coinPriceHistory)[:dayCounter])
+		} else {
+			shorttermhist11.Data = FloatToInts(GetHistoricPriceDataForCoin("TRAM", coinPriceHistory)[dayCounter-30:dayCounter])
+		}	
 		shorttermhist11.Title = shorttermhisttitle11
 		shorttermhist11.LineColor = termui.ColorMagenta
 		
 		shorttermhisttitle12 := ShortTermCoinTitle(coins[12], dayCounter, 12, selected)
 		shorttermhist12 := termui.NewSparkline()
-		shorttermhist12.Data = FloatToInts(GetHistoricPriceDataForCoin("DigiLink", coinPriceHistory))
+		if(dayCounter < 30) {
+			shorttermhist12.Data = FloatToInts(GetHistoricPriceDataForCoin("DigiLink", coinPriceHistory)[:dayCounter])
+		} else {
+			shorttermhist12.Data = FloatToInts(GetHistoricPriceDataForCoin("DigiLink", coinPriceHistory)[dayCounter-30:dayCounter])
+		}	
 		shorttermhist12.Title = shorttermhisttitle12
 		shorttermhist12.LineColor = termui.ColorCyan
 
 		shorttermhisttitle13 := ShortTermCoinTitle(coins[13], dayCounter, 13, selected)
 		shorttermhist13 := termui.NewSparkline()
-		shorttermhist13.Data = FloatToInts(GetHistoricPriceDataForCoin("XTRAbits", coinPriceHistory))
+		if(dayCounter < 30) {
+			shorttermhist13.Data = FloatToInts(GetHistoricPriceDataForCoin("XTRAbits", coinPriceHistory)[:dayCounter])
+		} else {
+			shorttermhist13.Data = FloatToInts(GetHistoricPriceDataForCoin("XTRAbits", coinPriceHistory)[dayCounter-30:dayCounter])
+		}	
 		shorttermhist13.Title = shorttermhisttitle13
 		shorttermhist13.LineColor = termui.ColorGreen
 
@@ -912,12 +968,14 @@ func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrice
 		} else {
 			sharesToGive := 0
 			for _, c2 := range coins {
-				if(c.LaunchDay() < dayCounter) {	
-					if(coinMarketShares[c2.Name()] > 4) {		
+				sharesToTake := random(1,5)
+				rollForDodge := random(1,4)
+				if(c.LaunchDay() < dayCounter && rollForDodge != 1) {	
+					if(coinMarketShares[c2.Name()] > 5) {		
 						previousShares := coinMarketShares[c2.Name()]
 						delete(coinMarketShares, c2.Name())
-						coinMarketShares[c2.Name()] = previousShares - 1		
-						sharesToGive = sharesToGive + 1
+						coinMarketShares[c2.Name()] = previousShares - sharesToTake		
+						sharesToGive = sharesToGive + sharesToTake
 					}
 				}
 
@@ -948,7 +1006,7 @@ func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrice
 	}
 
 	//shuffle shares		
-	coinMarketShares = ShuffleMarketShare(coinMarketShares, coins, news, GenerateTweets(coins), dayCounter)
+	coinMarketShares = ShuffleMarketShare(coinMarketShares, coins, news, GenerateTweets(coins), dayCounter, marketTrend)
 	
 	//record trader balances
 	t.RecordBalances(dayCounter)
@@ -956,7 +1014,7 @@ func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrice
 	return totalCap
 }
 
-func ShuffleMarketShare(coinMarketShares map[string]int, coins []*coin.Coin, news string, coinDailyTweets map[string]int, dayCounter int) map[string]int {
+func ShuffleMarketShare(coinMarketShares map[string]int, coins []*coin.Coin, news string, coinDailyTweets map[string]int, dayCounter int, marketTrend int) map[string]int {
 	//take 1 from every coin's share, leaves us with n share to distribute, n is number of coins that are past their launch day	
 	// also find which coin got news
 	sharesToGive := 0	
@@ -968,15 +1026,22 @@ func ShuffleMarketShare(coinMarketShares map[string]int, coins []*coin.Coin, new
 		}
 	}
 
-	// if a coin got news take a share from every coin with shares over 10 and give it to the coin with news
+	//!! If the market is very bearish, bitcoin will get the boost, but the news will still be reported for the other coin
+	if(marketTrend == 4 && strings.Compare(newsworthy,"") != 0) {
+		newsworthy = "Bitcoin"
+	}
+
+	// if a coin got news take 1-4 shares from every coin with shares over 4 and give it to the coin with news
 	if(strings.Compare(newsworthy,"") != 0) {
 		for _, c := range coins {
-			if(c.LaunchDay() < dayCounter) {	
-				if(coinMarketShares[c.Name()] > 10) {		
+			sharesToTake := random(1,5)
+			rollForDodge := random(1,4)
+			if(c.LaunchDay() < dayCounter && rollForDodge != 1) {	
+				if(coinMarketShares[c.Name()] > 4) {		
 					previousShares := coinMarketShares[c.Name()]
 					delete(coinMarketShares, c.Name())
-					coinMarketShares[c.Name()] = previousShares - 1		
-					sharesToGive = sharesToGive + 1
+					coinMarketShares[c.Name()] = previousShares - sharesToTake		
+					sharesToGive = sharesToGive + sharesToTake
 				}
 			}
 		}
