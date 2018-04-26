@@ -405,8 +405,8 @@ func main() {
 		}
 	})
 	
-	//"/timer/1s"
-	termui.Handle("/sys/kbd/g", func(termui.Event) {
+	//"/sys/kbd/g"
+	termui.Handle("/timer/1s", func(termui.Event) {
 		currentTime = currentTime.Add(time.Hour * 24 * 1)
 		dayCounter++
 
@@ -1069,6 +1069,14 @@ func ShuffleMarketShare(coinMarketShares map[string]int, coins []*coin.Coin, new
 		}
 	}
 	
+	// take two more off btc and give them away
+	if(sharesToGive == 0) {
+		newBtcShares := coinMarketShares["Bitcoin"] - 2
+		delete(coinMarketShares, "Bitcoin")
+	        coinMarketShares["Bitcoin"] = newBtcShares
+		sharesToGive = sharesToGive + 2 
+	}
+
 	//for now, give it to the coin who got news
 	prevShares := coinMarketShares[newsworthy]
 	delete(coinMarketShares, newsworthy)		
