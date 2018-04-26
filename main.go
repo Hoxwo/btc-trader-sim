@@ -994,12 +994,19 @@ func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrice
 
 			}
 
-			// if we came out of that with 0 shares to give just take 10 from btc its buffed enuff
+			// if we came out of that with 0 shares to give just take 10 or 1 from btc its buffed enuff
 			if(sharesToGive == 0) {
-				newBtcShares := coinMarketShares["Bitcoin"] - 10
-				delete(coinMarketShares, "Bitcoin")
-	        		coinMarketShares["Bitcoin"] = newBtcShares
-				sharesToGive = 10
+				if(coinMarketShares["Bitcoin"] > 15) {
+					newBtcShares := coinMarketShares["Bitcoin"] - 10
+					delete(coinMarketShares, "Bitcoin")
+	        			coinMarketShares["Bitcoin"] = newBtcShares
+					sharesToGive = 10
+				} else {
+					newBtcShares := coinMarketShares["Bitcoin"] - 1
+					delete(coinMarketShares, "Bitcoin")
+	        			coinMarketShares["Bitcoin"] = newBtcShares
+					sharesToGive = 1
+				}
 			}
 		
 			prevShares := coinMarketShares[c.Name()]
@@ -1055,11 +1062,13 @@ func ShuffleMarketShare(coinMarketShares map[string]int, coins []*coin.Coin, new
 
 	// if a coin got news take 1-3 shares from every coin with shares over 4 and give it to the coin with news
 	if(strings.Compare(newsworthy,"") != 0) {	
-		// take two off btc and give them away
-		newBtcShares := coinMarketShares["Bitcoin"] - 2
-		delete(coinMarketShares, "Bitcoin")
-	        coinMarketShares["Bitcoin"] = newBtcShares
-		sharesToGive = sharesToGive + 2 
+		// take two off btc and give them away if btc is still packin
+		if(coinMarketShares["Bitcoin"] > 20) {
+			newBtcShares := coinMarketShares["Bitcoin"] - 2
+			delete(coinMarketShares, "Bitcoin")
+		        coinMarketShares["Bitcoin"] = newBtcShares
+			sharesToGive = sharesToGive + 2 
+		}
 	
 		for _, c := range coins {
 			sharesToTake := random(1,4)
