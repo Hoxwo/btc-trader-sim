@@ -1054,7 +1054,13 @@ func ShuffleMarketShare(coinMarketShares map[string]int, coins []*coin.Coin, new
 	}
 
 	// if a coin got news take 1-3 shares from every coin with shares over 4 and give it to the coin with news
-	if(strings.Compare(newsworthy,"") != 0) {
+	if(strings.Compare(newsworthy,"") != 0) {	
+		// take two off btc and give them away
+		newBtcShares := coinMarketShares["Bitcoin"] - 2
+		delete(coinMarketShares, "Bitcoin")
+	        coinMarketShares["Bitcoin"] = newBtcShares
+		sharesToGive = sharesToGive + 2 
+	
 		for _, c := range coins {
 			sharesToTake := random(1,4)
 			rollForDodge := random(1,4)
@@ -1067,14 +1073,6 @@ func ShuffleMarketShare(coinMarketShares map[string]int, coins []*coin.Coin, new
 				}
 			}
 		}
-	}
-	
-	// take two more off btc and give them away
-	if(sharesToGive == 0) {
-		newBtcShares := coinMarketShares["Bitcoin"] - 2
-		delete(coinMarketShares, "Bitcoin")
-	        coinMarketShares["Bitcoin"] = newBtcShares
-		sharesToGive = sharesToGive + 2 
 	}
 
 	//for now, give it to the coin who got news
