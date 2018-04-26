@@ -992,6 +992,15 @@ func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrice
 				}
 
 			}
+
+			// if we came out of that with 0 shares to give just take one from btc its buffed enuff
+			if(sharesToGive == 0) {
+				newBtcShares := coinMarketShares["Bitcoin"] - 1
+				delete(coinMarketShares, "Bitcoin")
+	        		coinMarketShares["Bitcoin"] = newBtcShares
+				sharesToGive = 1
+			}
+		
 			prevShares := coinMarketShares[c.Name()]
 			delete(coinMarketShares, c.Name())		
 			coinMarketShares[c.Name()] = prevShares + sharesToGive
