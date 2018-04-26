@@ -392,6 +392,18 @@ func main() {
 			selected++
 		}
 	})
+
+	termui.Handle("/sys/kbd/,", func(termui.Event) {
+		if(selected > 0) {		
+			selected--
+		}
+	})
+
+	termui.Handle("/sys/kbd/.", func(termui.Event) {
+		if(selected < 13) {		
+			selected++
+		}
+	})
 	
 	termui.Handle("/timer/1s", func(termui.Event) {
 		currentTime = currentTime.Add(time.Hour * 24 * 1)
