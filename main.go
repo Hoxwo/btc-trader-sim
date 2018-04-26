@@ -405,7 +405,8 @@ func main() {
 		}
 	})
 	
-	termui.Handle("/timer/1s", func(termui.Event) {
+	//"/timer/1s"
+	termui.Handle("/sys/kbd/g", func(termui.Event) {
 		currentTime = currentTime.Add(time.Hour * 24 * 1)
 		dayCounter++
 
@@ -961,7 +962,7 @@ func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrice
 	    	coinPriceHistory[c.Name()] = append(currentPriceHistory, coinPrices[c.Name()])
 	    } else if(c.LaunchDay() == dayCounter) {	
 		icoShare := random(1,5)
-		if(coinMarketShares["Bitcoin"] > 80) {
+		if(coinMarketShares["Bitcoin"] > 60) {
 			//take icoShare from BTC
 			newBtcShares := coinMarketShares["Bitcoin"] - icoShare
 			delete(coinMarketShares, "Bitcoin")
@@ -993,12 +994,12 @@ func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrice
 
 			}
 
-			// if we came out of that with 0 shares to give just take one from btc its buffed enuff
+			// if we came out of that with 0 shares to give just take 10 from btc its buffed enuff
 			if(sharesToGive == 0) {
-				newBtcShares := coinMarketShares["Bitcoin"] - 1
+				newBtcShares := coinMarketShares["Bitcoin"] - 10
 				delete(coinMarketShares, "Bitcoin")
 	        		coinMarketShares["Bitcoin"] = newBtcShares
-				sharesToGive = 1
+				sharesToGive = 10
 			}
 		
 			prevShares := coinMarketShares[c.Name()]
@@ -1052,10 +1053,10 @@ func ShuffleMarketShare(coinMarketShares map[string]int, coins []*coin.Coin, new
 		newsworthy = "Bitcoin"
 	}
 
-	// if a coin got news take 1-4 shares from every coin with shares over 4 and give it to the coin with news
+	// if a coin got news take 1-3 shares from every coin with shares over 4 and give it to the coin with news
 	if(strings.Compare(newsworthy,"") != 0) {
 		for _, c := range coins {
-			sharesToTake := random(1,5)
+			sharesToTake := random(1,4)
 			rollForDodge := random(1,4)
 			if(c.LaunchDay() < dayCounter && rollForDodge != 1) {	
 				if(coinMarketShares[c.Name()] > 4) {		
