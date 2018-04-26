@@ -906,7 +906,7 @@ func GenerateNews(coins []*coin.Coin, dayCounter int) string {
 	randomIdx := (random(1,15)-1)
 	news := ""	
 	
-	if(chanceOfNews % 2 == 0 || randomIdx == 0 || randomIdx == 2) { //BTC always gets its news, so does NTH
+	if(chanceOfNews % 2 == 0 || randomIdx == 0) { //BTC always gets its news
 		if(coins[randomIdx].LaunchDay() < dayCounter) {
 			eventStringRandomizer := random(1,7)
 			if(eventStringRandomizer == 1) {
