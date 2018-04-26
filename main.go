@@ -996,7 +996,7 @@ func AdvanceOneDay(coins []*coin.Coin, exchanges []*exchange.Exchange, coinPrice
 
 			// if we came out of that with 0 shares to give just take 10 or 1 from btc its buffed enuff
 			if(sharesToGive == 0) {
-				if(coinMarketShares["Bitcoin"] > 15) {
+				if(coinMarketShares["Bitcoin"] > 24) {
 					newBtcShares := coinMarketShares["Bitcoin"] - 10
 					delete(coinMarketShares, "Bitcoin")
 	        			coinMarketShares["Bitcoin"] = newBtcShares
