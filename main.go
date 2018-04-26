@@ -118,12 +118,12 @@ func main() {
 	coinMarketShares[c13.Name()] = 0
 
 	//set up exchanges  
-	e0 := exchange.New("Mt Ganx",   4,    35,   0)
-	e1 := exchange.New("GDOX",      0,   195,  75)
-	e2 := exchange.New("BitSaurus", 0,   570, 120)
-	e3 := exchange.New("CoinHQ",    0,  1800, 350)
-	e4 := exchange.New("Czinance",  0,  1250, 500)
-	e5 := exchange.New("Napoleox",  0,  1000, 600)
+	e0 := exchange.New("Mt Ganx",   4,    25,   0)
+	e1 := exchange.New("GDOX",      0,   125,  75)
+	e2 := exchange.New("BitSaurus", 0,   500, 120)
+	e3 := exchange.New("CoinHQ",    0,  1000, 350)
+	e4 := exchange.New("Czinance",  0,   900, 500)
+	e5 := exchange.New("Napoleox",  0,   750, 600)
 	e6 := exchange.New("YoCoin",    0,   350, 660)
 	e7 := exchange.New("CoinHawk",  0,   300, 800)	
 
@@ -1095,7 +1095,7 @@ func ShuffleMarketShare(coinMarketShares map[string]int, coins []*coin.Coin, new
 
 
 func MarketCapInfoString(totalMarketCap int) string {
-	maxCap := 5000
+	maxCap := 4000
 	marketCapInfo := fmt.Sprintf("$%dB/$%dB", totalMarketCap, maxCap)
 	return marketCapInfo
 }
